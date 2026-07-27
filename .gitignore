@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# fo-intel-pipeline: IRS index CSVs are ~75MB each, re-downloadable
+# from apps.irs.gov — don't commit. Keep discovery JSONL + SQLite (audit outputs).
+data/cache/

@@ -14,36 +14,40 @@ Design principles baked into this schema:
 """
 
 from __future__ import annotations
+
 from datetime import date
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel, Field, model_validator
 
 
 class DiscoverySource(str, Enum):
-    FORM_990PF = "990pf"          # IRS private foundation filings
-    SEC_EDGAR = "sec_edgar"       # 13F / Form D / ADV full-text
+    FORM_990PF = "990pf"  # IRS private foundation filings
+    SEC_EDGAR = "sec_edgar"  # 13F / Form D / ADV full-text
+    CA_SOS = "ca_sos"  # California Secretary of State business registry
 
 
 class FOType(str, Enum):
     SINGLE_FAMILY = "single_family_office"
     MULTI_FAMILY = "multi_family_office"
-    UNCLEAR = "unclear"           # honest exclusion state — never ships
+    UNCLEAR = "unclear"  # honest exclusion state — never ships
 
 
 class VerificationStatus(str, Enum):
-    VERIFIED = "verified"                 # method + source confirm the value
-    COULD_NOT_VERIFY = "could_not_verify" # honest blank — allowed, scored as candor
-    REJECTED = "rejected"                 # failed its own validation, must not
-                                           # appear in the delivered field
+    VERIFIED = "verified"  # method + source confirm the value
+    COULD_NOT_VERIFY = "could_not_verify"  # honest blank — allowed, scored as candor
+    REJECTED = "rejected"  # failed its own validation, must not
+    # appear in the delivered field
 
 
 class VerifiedField(BaseModel):
     """Wraps any high-value cell with mandatory provenance."""
+
     value: Optional[str] = None
     status: VerificationStatus
-    source: Optional[str] = None          # e.g. "SEC ADV brochure, Part 2A"
-    method: Optional[str] = None          # e.g. "cross-checked against state SOS filing"
+    source: Optional[str] = None  # e.g. "SEC ADV brochure, Part 2A"
+    method: Optional[str] = None  # e.g. "cross-checked against state SOS filing"
     checked_on: Optional[date] = None
 
     @model_validator(mode="after")
@@ -61,7 +65,8 @@ class VerifiedField(BaseModel):
 
 class ActivitySignal(BaseModel):
     """A single dated, current intelligence signal (investment, hire, news)."""
-    signal_type: str              # "investment" | "hire" | "news" | "fund_commitment"
+
+    signal_type: str  # "investment" | "hire" | "news" | "fund_commitment"
     description: str
     date_observed: date
     source: str
@@ -71,18 +76,18 @@ class FamilyOfficeRecord(BaseModel):
     # --- Discovery / audit trail (mandatory, set at creation) ---
     record_id: str
     discovery_source: DiscoverySource
-    discovery_note: str            # what specifically was found where
+    discovery_note: str  # what specifically was found where
     state_targeting: Optional[str] = None  # USPS state code for the pilot run
-                                            # this record was discovered under (e.g. "CA").
-                                            # Tracked for methodology transparency so
-                                            # the source-mix ratio can be audited per
-                                            # state, not just nationally.
+    # this record was discovered under (e.g. "CA").
+    # Tracked for methodology transparency so
+    # the source-mix ratio can be audited per
+    # state, not just nationally.
 
     # --- Firm-level qualification gate (PASS/FAIL, mandatory) ---
     fo_type: FOType
-    fo_type_evidence: str           # required, non-empty; the affirmative
-                                     # evidence establishing this IS a family
-                                     # office and its type
+    fo_type_evidence: str  # required, non-empty; the affirmative
+    # evidence establishing this IS a family
+    # office and its type
 
     # --- Core entity attributes ---
     entity_name: str
@@ -128,6 +133,7 @@ class FamilyOfficeRecord(BaseModel):
 
 class ExcludedCandidate(BaseModel):
     """Firms that failed the qualification gate — kept for audit, not delivery."""
+
     record_id: str
     discovery_source: DiscoverySource
     entity_name: str

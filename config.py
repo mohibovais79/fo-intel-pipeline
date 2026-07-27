@@ -61,6 +61,46 @@ PROPUBLICA_BASE_URL = "https://projects.propublica.org/nonprofits/api/v2"
 PROPUBLICA_REQUEST_DELAY_SECONDS = 0.5  # throttle between paginated calls
 PROPUBLICA_PAGE_SIZE = 100               # max results per page
 
+# --- IRS 990 e-file XML ---
+# ProPublica's parsed JSON contains only financial summary fields —
+# officer/trustee NAMES live only in the raw 990-PF XML. The original
+# AWS Open Data `irs-form-990` S3 bucket was discontinued Dec 31, 2021
+# (single-XML fetches by OBJECT_ID return 404). The IRS now publishes
+# monthly ZIP bundles on apps.irs.gov (~100-160MB each), but downloading
+# ~1.8GB/year to extract a few hundred candidate XMLs is wasteful.
+#
+# The GivingTuesday 990 Data Lake mirrors the IRS e-file XMLs as
+# individual files, accessible via public HTTPS with no AWS account.
+# This gives per-candidate XML download without bulk ZIP transfers.
+# Caveat: GivingTuesday bucket last updated 2023-10-28; for tax years
+# 2024+ a fallback to IRS monthly ZIPs with stream-extraction would
+# be needed. See docs/pivot_log.md pivot 3.
+IRS_INDEX_BASE_URL = "https://apps.irs.gov/pub/epostcard/990/xml"
+IRS_XML_SOURCE_URL = "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles"
+IRS_XML_REQUEST_DELAY_SECONDS = 0.3
+# Years to pull index + XML for, per candidate EIN (most recent first).
+# 990-PF e-filing became effectively mandatory for tax years >= 2021.
+IRS_INDEX_YEARS = [2023, 2022, 2021, 2019]
+
+# --- Pre-XML noise filter (step 4) ---
+# Operating-charity supporting foundations (hospital, university, church)
+# file 990-PF, have $10M+ assets, and are NOT family offices. Name-
+# keyword exclusion catches the bulk of this noise before we spend an
+# XML fetch. Conservative by design — false positives (a real SFO
+# excluded because its name contains a keyword) are recoverable in
+# manual review; false negatives (a hospital foundation that ships as
+# an SFO) are disqualifying.
+#
+# This is the PRE-XML filter only. The real family-foundation
+# fingerprint (officer count ≤ ~6 AND/OR shared surname) runs post-XML
+# in step 6 — see docs/pivot_log.md pivot 4.
+OPERATING_CHARITY_KEYWORDS = [
+    "hospital", "medical center", "health system", "health care",
+    "university", "college", "school", "academy",
+    "church", "diocese", "cathedral", "synagogue", "temple", "mosque",
+    "archdiocese", "convention", "conference of",
+]
+
 # --- Output paths ---
 # SQLite is the source of truth between pipeline stages; JSONL exports per
 # stage are git-diffable for audit. Both written under data/.

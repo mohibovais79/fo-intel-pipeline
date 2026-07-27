@@ -7,17 +7,16 @@ the differentiator assessment: "decided before you start counting").
 
 ## 1. Discovery channels
 
-Minimum 3+ genuinely independent channels, not 3 search queries on the
-same channel. Each candidate is tagged with `discovery_source` at the
-point of discovery, before any enrichment — this is what proves diversity
+Three genuinely independent channels, not 3 search queries on the same
+channel. Each candidate is tagged with `discovery_source` at the point
+of discovery, before any enrichment — this is what proves diversity
 later.
 
 | Channel | `DiscoverySource` tag | Status | Notes |
 |---|---|---|---|
-| IRS Form 990-PF (private foundations) | `990pf` | Pilot — CA | ProPublica Nonprofit Explorer API; $10M+ foundation assets; officers/trustees + mailing address extracted; address + surname clustering across ≥2 foundations = FO fingerprint |
+| IRS Form 990-PF (private foundations) | `990pf` | Pilot — CA | IRS 990 e-file index CSV (filters `RETURN_TYPE=990PF`) intersected with ProPublica's CA 501(c)(3) EIN set → CA private foundations that e-filed. ProPublica `/organizations/{ein}.json` for financials + mailing address. Pre-XML noise filter: name-keyword exclusion of operating-charity supporting foundations (hospital/university/church). Raw 990-PF XML from GivingTuesday 990 Data Lake for officer/trustee name + title extraction. Post-XML filter: officer count ≤ ~6 AND/OR shared surname. Cross-foundation surname clustering (≥2 foundations sharing a surname) = strongest FO fingerprint. Paper-filed returns with no XML are flagged as a known blind spot. Full pivot history in `docs/pivot_log.md`. |
 | SEC EDGAR (13F / Form D / ADV full-text) | `sec_edgar` | Planned | 13F filers >$100M AUM; ADV Part 2A brochure text used to confirm "manages family capital" vs "advises third-party clients" |
-| State business / LLC registries | (to be added to enum) | Planned | CA SOS business search; confirms entity existence + principal address; independent of federal filings |
-| LinkedIn people-search (not company-search) | (to be added) | Planned | People who self-identify as "Family Office CIO" / "Director of Investments at [family surname] Family Office" |
+| California Secretary of State business registry | `ca_sos` | Planned | CA SOS business search; confirms entity existence + principal address; independent of federal filings. Lightweight 3rd channel — lower engineering cost than LinkedIn people-search, and provides an independent verification path for 990-PF-discovered candidates (does the foundation's mailing address correspond to a registered business entity?). |
 
 ### Source-mix ratio guard
 
@@ -145,9 +144,30 @@ Updated as the pipeline surfaces them. Initial set:
   as their own 990-PF. This systematically under-represents
   recently-liquid tech wealth that hasn't set up a private foundation
   yet.
-- ProPublica's parsed officer data occasionally drops the title field
-  for older filings; raw IRS XML would recover it but is not used in
-  the pilot (see `Data source` decision: ProPublica API only).
+- ProPublica's parsed JSON filings contain only financial summary
+  fields — officer/trustee **names** are not in the API response.
+  Officer names are extracted from the raw IRS 990 e-file XML via the
+  GivingTuesday 990 Data Lake (the original AWS `irs-form-990` bucket
+  was discontinued Dec 31, 2021). Foundations that paper-filed
+  (pre-e-file mandate or non-e-filed returns) have no XML available;
+  these are flagged in the audit record as `no_xml_filing` and
+  excluded from officer-name extraction. This is an honest, disclosed
+  gap — the alternative (PDF text parsing of Part VII tables) is
+  brittle across preparer/software layout variation, and dropping
+  officer names entirely would reduce the channel to noisy
+  mailing-address clustering (registered agents and law firms serve
+  as mailing address for dozens of unrelated foundations). Full
+  pivot history in `docs/pivot_log.md`.
+- The GivingTuesday data lake was last updated 2023-10-28. Tax year
+  2024+ filings may not be present; for the CA pilot (recent filings
+  2019-2023) this is acceptable. Scaling to 2024+ would require a
+  fallback to IRS monthly ZIP bundles with stream-extraction by
+  OBJECT_ID.
+- The pre-XML noise filter (operating-charity keyword exclusion) is
+  conservative. It will not catch a supporting foundation whose name
+  doesn't contain a keyword (e.g. "XYZ Foundation" supporting a
+  hospital). The post-XML officer-count and surname filters catch
+  these — but only after an XML fetch has been spent.
 - The institutional-manager denylist is a seed list. False positives
   (a real SFO excluded because its name contains a generic token) are
   recoverable via manual review; false negatives (an institutional firm

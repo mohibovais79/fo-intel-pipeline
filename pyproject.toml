@@ -1,0 +1,24 @@
+[project]
+name = "fo-intel-pipeline"
+version = "0.1.0"
+description = "Family office intelligence pipeline: discovery, qualification, enrichment, RAG"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6",
+    "httpx>=0.27",
+    "lxml>=6.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

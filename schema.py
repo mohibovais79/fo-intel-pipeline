@@ -25,7 +25,6 @@ from pydantic import BaseModel, Field, model_validator
 class DiscoverySource(str, Enum):
     FORM_990PF = "990pf"  # IRS private foundation filings
     SEC_EDGAR = "sec_edgar"  # 13F / Form D / ADV full-text
-    CA_SOS = "ca_sos"  # California Secretary of State business registry
 
 
 class FOType(str, Enum):

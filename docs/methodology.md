@@ -7,23 +7,24 @@ the differentiator assessment: "decided before you start counting").
 
 ## 1. Discovery channels
 
-Three genuinely independent channels, not 3 search queries on the same
+Two genuinely independent channels, not 2 search queries on the same
 channel. Each candidate is tagged with `discovery_source` at the point
 of discovery, before any enrichment — this is what proves diversity
-later.
+later. The source-mix ratio is tracked live; no single channel may
+produce >60% of candidates by the halfway point.
 
 | Channel | `DiscoverySource` tag | Status | Notes |
 |---|---|---|---|
-| IRS Form 990-PF (private foundations) | `990pf` | Pilot — CA | IRS 990 e-file index CSV (filters `RETURN_TYPE=990PF`) intersected with ProPublica's CA 501(c)(3) EIN set → CA private foundations that e-filed. ProPublica `/organizations/{ein}.json` for financials + mailing address. Pre-XML noise filter: name-keyword exclusion of operating-charity supporting foundations (hospital/university/church). Raw 990-PF XML from GivingTuesday 990 Data Lake for officer/trustee name + title extraction. Post-XML filter: officer count ≤ ~6 AND/OR shared surname. Cross-foundation surname clustering (≥2 foundations sharing a surname) = strongest FO fingerprint. Paper-filed returns with no XML are flagged as a known blind spot. Full pivot history in `docs/pivot_log.md`. |
+| IRS Form 990-PF (private foundations) | `990pf` | Built — CA pilot | IRS 990 e-file index CSV (filters `RETURN_TYPE=990PF`) intersected with ProPublica's CA 501(c)(3) EIN set → CA private foundations that e-filed. ProPublica `/organizations/{ein}.json` for financials + mailing address. Pre-XML noise filter: name-keyword exclusion of operating-charity supporting foundations (hospital/university/church). Raw 990-PF XML from GivingTuesday 990 Data Lake for officer/trustee name + title extraction. Post-XML filter: soft fingerprint score (shared surname +2, small board +1, medium board 0, large board -1, attached schedule +1, no officers -2; pass threshold >= 1). Paper-filed returns with no XML are flagged as a known blind spot. Full pivot history in `docs/pivot_log.md`. |
 | SEC EDGAR (13F / Form D / ADV full-text) | `sec_edgar` | Planned | 13F filers >$100M AUM; ADV Part 2A brochure text used to confirm "manages family capital" vs "advises third-party clients" |
-| California Secretary of State business registry | `ca_sos` | Planned | CA SOS business search; confirms entity existence + principal address; independent of federal filings. Lightweight 3rd channel — lower engineering cost than LinkedIn people-search, and provides an independent verification path for 990-PF-discovered candidates (does the foundation's mailing address correspond to a registered business entity?). |
 
 ### Source-mix ratio guard
 
-Tracked live, not at the end. If any single channel produces
-`> max_single_source_share_at_halfway` (currently 0.60) of candidates by
-the halfway point, work stops and a new channel is opened before
-continuing. This is enforced in code, not by memory.
+Tracked live, not at the end. With 2 channels the target is a
+near-even ~50/50 split; if either channel produces
+`> max_single_source_share_at_halfway` (currently 0.60) of candidates
+by the halfway point, work stops and the under-producing channel is
+expanded before continuing. This is enforced in code, not by memory.
 
 ### SFO-bias
 

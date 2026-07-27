@@ -91,11 +91,10 @@ So the filter has to split:
   patterns ("Hospital", "University", "College", "School", "Medical
   Center", "Health System", "Church", "Diocese", etc.). Conservative;
   catches the bulk of obvious noise.
-- **Post-XML (step 6):** officer count ≤ ~6 AND/OR ≥2 officers sharing
-  a surname. This is the real family-foundation fingerprint and can
-  only run after XML parse. Cross-foundation surname clustering
-  (≥2 foundations sharing a surname) is the strongest signal but
-  needs the full parsed candidate set.
+- **Post-XML (step 6):** officer count + shared surname. This is the
+  real family-foundation fingerprint and can only run after XML parse.
+  Cross-foundation surname clustering (≥2 foundations sharing a
+  surname) is the strongest signal but needs the full parsed set.
 
 **Why this matters:** A foundation called "Stanford Hospital Foundation"
 files 990-PF, has $100M+ assets, and is not a family office. Without
@@ -105,3 +104,42 @@ fetch. Without the post-XML officer filter, it would pass step 6 too
 shared surname). Both filters are needed; pretending step 4 can do
 surname filtering would be dishonest about where the signal actually
 lives.
+
+## Pivot 5 — Officer-count hard cap was a false-negative bug
+
+**Problem:** The original post-XML filter used a hard cutoff at
+`officer_count <= 6`. This excluded real family foundations that have
+larger boards because the family includes grown children, spouses, and
+a few independent trustees:
+
+- Sandberg Goldberg Bernthal Family Charitable Foundation — 10
+  officers, clearly a family foundation by name, excluded.
+- Eric And Wendy Schmidt Fund For Strategic Innovation — 10 officers,
+  clearly a family foundation by name, excluded.
+
+A hard cap at 6 was too tight for the reality of family foundations
+with extended families on the board. This was a correctness bug in
+the filter, not a calibration preference — the 195 "excluded" and 575
+"passed" pools from the first run were both wrong.
+
+**Pivot:** Replaced the hard cutoff with a soft scoring system:
+  +2 shared_surname (strongest signal)
+  +1 officer_count <= 6
+   0 officer_count 7-12
+  -1 officer_count > 12
+  +1 attached_schedule (if count <= 12)
+  -2 no officers parsed
+Pass threshold: score >= 1.
+
+This lets shared-surname foundations with 10-12 officers pass (score
+2+0=2) while still excluding medium-board foundations with no family
+signal (score 0+0=0) and large institutional boards (score 0-1=-1).
+The re-run against the existing 768 raw candidates is cheap — no
+re-fetching, just re-applying the filter to cached parse results.
+
+**Why a soft score, not a higher hard cap:** A higher hard cap (say
+12) would let through every medium-board foundation regardless of
+whether there's any family signal. The soft score makes shared
+surname the discriminating signal at higher board sizes — which is
+exactly what it should be, since shared surname is the actual
+family-foundation evidence and officer count is only a proxy.

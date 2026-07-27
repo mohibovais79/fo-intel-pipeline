@@ -49,8 +49,9 @@ THRESHOLDS: dict[str, object] = {
     "contact_decisiveness_minimum_fields": 1,
 
     # --- Source-mix diversity guard (rule #1) ---
-    # If any single discovery channel produces more than this fraction of
-    # candidates by the halfway point, stop and open a new channel before
+    # With 2 channels the target is a near-even ~50/50 split. If either
+    # channel produces more than this fraction of candidates by the
+    # halfway point, stop and expand the under-producing channel before
     # continuing. Tracked live, not at the end.
     "max_single_source_share_at_halfway": 0.60,
 }

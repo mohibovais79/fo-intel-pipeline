@@ -1,0 +1,123 @@
+# fo-intel-pipeline — institutional manager exclude list
+#
+# Hand-curated seed list of institutional asset managers, PE/hedge funds,
+# bank-owned private wealth arms, and RIA/advisory firms that must NOT be
+# classified as family offices. Used as a substring match against entity
+# names during the qualification gate (see config.EXCLUSION_REASON_INSTITUTIONAL).
+#
+# One token per line. Lines starting with # are comments. Match is
+# case-insensitive substring against the entity_name field.
+#
+# Categories (per methodology spec):
+#  - Tier-1 institutional asset managers
+#  - PE / hedge fund / alternative investment firms
+#  - Bank-owned private banking / wealth management arms
+#  - RIA / advisory-centric firms (third-party capital, not family wealth)
+#  - Corporate family-office arms of public/operating companies
+#
+# This is a *seed* list (~80 names). It is intentionally conservative —
+# false negatives (a real SFO that gets excluded) are recoverable via
+# manual review; false positives (an institutional firm that ships as an
+# SFO) are disqualifying. The list will grow as the pipeline surfaces
+# new false-positive patterns.
+
+# === Tier-1 institutional asset managers ===
+BlackRock
+Vanguard
+Fidelity Investments
+State Street
+J.P. Morgan Asset Management
+JPMorgan Asset Management
+Goldman Sachs Asset Management
+GS Asset Management
+Morgan Stanley Investment Management
+Wellington Management
+T. Rowe Price
+Capital Group
+American Funds
+Invesco
+Franklin Templeton
+Legg Mason
+Eaton Vance
+PIMCO
+AllianceBernstein
+AB Global
+TIAA
+Nuveen
+Prudential Financial
+MassMutual
+Northwestern Mutual
+
+# === PE / hedge fund / alternative investment firms ===
+Blackstone
+Apollo Global Management
+KKR
+Carlyle Group
+Bain Capital
+Advent International
+Warburg Pincus
+TPG
+CVC Capital
+EQT Partners
+Permira
+Hellman & Friedman
+Citadel
+Point72
+Millennium Management
+Renaissance Technologies
+Two Sigma
+Bridgewater Associates
+AQR Capital
+D.E. Shaw
+Tiger Global
+Coatue Management
+Viking Global
+Third Point
+Pershing Square
+Elliott Management
+
+# === Bank-owned private banking / wealth management arms ===
+Bessemer Trust
+Northern Trust
+Wilmington Trust
+U.S. Bank Wealth Management
+US Bank Private Wealth
+Bank of America Private Bank
+Merrill Lynch Wealth Management
+Merrill Lynch Global Wealth
+UBS Private Banking
+UBS Wealth Management
+Credit Suisse Private Banking
+Credit Suisse Wealth Management
+PNC Wealth Management
+BNY Mellon Wealth Management
+Brown Brothers Harriman
+Cambridge Trust
+Fiduciary Trust
+Glenmede Trust
+Homestead Trust
+Vanguard Personal Advisor
+
+# === RIA / advisory-centric firms (third-party capital) ===
+Cambridge Investment Research
+LPL Financial
+Commonwealth Financial Network
+Raymond James Financial Services
+Edward Jones
+Cambridge Wealth
+Aspiriant
+Mesirow Financial
+Brown Advisory
+Fisher Investments
+Mercer Advisors
+Mariner Wealth Advisors
+Creative Planning
+Vanguard Advisory Services
+
+# === Corporate family-office arms / public-company subsidiaries ===
+Berkshire Hathaway
+Omaha Capital
+Google LLC
+Alphabet
+Meta Platforms
+Apple Inc

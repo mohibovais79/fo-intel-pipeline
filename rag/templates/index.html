@@ -395,8 +395,21 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-size: 0.9rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: loading-bar 1.4s ease-in-out infinite;
         }
 
         .spinner {
@@ -405,6 +418,15 @@
             border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 700ms linear infinite;
+            flex-shrink: 0;
+        }
+
+        .loading-text {
+            transition: opacity 300ms ease;
+        }
+
+        .loading-text.fade {
+            opacity: 0;
         }
 
         /* ── Empty State ── */
@@ -465,6 +487,11 @@
             to { transform: rotate(360deg); }
         }
 
+        @keyframes loading-bar {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -499,7 +526,7 @@
         <header>
             <div class="logo">
                 <span class="logo-dot"></span>
-                CA Pilot · Live
+                California Pilot · Live
             </div>
             <h1>Family Office Intelligence</h1>
             <p>Search 44 qualified family office records discovered through IRS 990-PF filings and SEC EDGAR 13F data — every answer grounded in verified public filings.</p>
@@ -571,22 +598,49 @@
         const resultsDiv = document.getElementById('results');
         const queryInput = document.getElementById('query');
 
+        const loadingMessages = [
+            'Searching family office records...',
+            'Scanning IRS 990-PF filings...',
+            'Checking SEC EDGAR 13F data...',
+            'Matching confidence tiers...',
+            'Verifying field provenance...',
+            'Applying grounding control...',
+        ];
+
+        let loadingInterval = null;
+
         async function search() {
             const query = queryInput.value.trim();
             if (!query) return;
 
+            // Rotating loading messages
+            let msgIdx = 0;
             resultsDiv.innerHTML = `
                 <div class="loading-card">
                     <div class="spinner"></div>
-                    Searching family office records...
+                    <span class="loading-text" id="loading-text">${loadingMessages[0]}</span>
                 </div>
             `;
+            const loadingText = document.getElementById('loading-text');
+
+            loadingInterval = setInterval(() => {
+                msgIdx = (msgIdx + 1) % loadingMessages.length;
+                if (loadingText) {
+                    loadingText.classList.add('fade');
+                    setTimeout(() => {
+                        loadingText.textContent = loadingMessages[msgIdx];
+                        loadingText.classList.remove('fade');
+                    }, 300);
+                }
+            }, 900);
 
             try {
                 const resp = await fetch('/api/search?q=' + encodeURIComponent(query));
                 const data = await resp.json();
+                clearInterval(loadingInterval);
                 resultsDiv.innerHTML = renderResult(data);
             } catch (err) {
+                clearInterval(loadingInterval);
                 resultsDiv.innerHTML = `
                     <div class="result-card no-results">
                         <div class="result-header">

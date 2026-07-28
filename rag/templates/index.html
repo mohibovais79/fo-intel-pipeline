@@ -3,181 +3,653 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Office Intelligence — CA Pilot</title>
+    <title>Family Office Intelligence — California</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0f1117;
-            --surface: #1a1d27;
-            --border: #2a2d3a;
-            --text: #e4e4e7;
-            --text-muted: #71717a;
-            --accent: #6366f1;
-            --accent-hover: #818cf8;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --radius: 8px;
+            --bg: #08090d;
+            --bg-gradient: radial-gradient(ellipse at top, #111318 0%, #08090d 60%);
+            --surface: #111318;
+            --surface-hover: #161821;
+            --surface-elevated: #1a1d28;
+            --border: #1e2130;
+            --border-hover: #2a2e42;
+            --text: #f0f0f3;
+            --text-secondary: #a0a3b1;
+            --text-muted: #5c5f72;
+            --accent: #7c6ff0;
+            --accent-soft: rgba(124, 111, 240, 0.12);
+            --accent-glow: rgba(124, 111, 240, 0.25);
+            --success: #34d399;
+            --success-soft: rgba(52, 211, 153, 0.1);
+            --warning: #fbbf24;
+            --warning-soft: rgba(251, 191, 36, 0.1);
+            --danger: #f87171;
+            --danger-soft: rgba(248, 113, 113, 0.1);
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+            --shadow-elevated: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px var(--border);
+            --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
         }
-        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
-        header { text-align: center; margin-bottom: 2rem; }
-        header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem; }
-        header p { color: var(--text-muted); font-size: 0.9rem; }
-        .search-box {
-            display: flex; gap: 0.5rem; margin-bottom: 1rem;
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
         }
-        .search-box input {
-            flex: 1; padding: 0.75rem 1rem;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); color: var(--text); font-size: 1rem;
-            outline: none; transition: border-color 0.2s;
+
+        /* ── Header ── */
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 600ms ease-out;
         }
-        .search-box input:focus { border-color: var(--accent); }
-        .search-box button {
-            padding: 0.75rem 1.5rem; background: var(--accent);
-            border: none; border-radius: var(--radius); color: white;
-            font-size: 1rem; cursor: pointer; transition: background 0.2s;
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.8rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
         }
-        .search-box button:hover { background: var(--accent-hover); }
-        .examples {
-            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;
+
+        .logo-dot {
+            width: 6px; height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse 2s ease-in-out infinite;
         }
-        .examples button {
-            padding: 0.4rem 0.8rem; background: var(--surface);
-            border: 1px solid var(--border); border-radius: 20px;
-            color: var(--text-muted); font-size: 0.8rem; cursor: pointer;
-            transition: all 0.2s;
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(180deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .examples button:hover { border-color: var(--accent); color: var(--text); }
-        .result-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem;
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
-        .result-card.grounded { border-left: 3px solid var(--success); }
-        .result-card.unverified { border-left: 3px solid var(--warning); }
-        .result-card.no-results { border-left: 3px solid var(--danger); }
-        .badge {
-            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 500; margin-bottom: 0.75rem;
-        }
-        .badge.grounded { background: rgba(34,197,94,0.15); color: var(--success); }
-        .badge.unverified { background: rgba(245,158,11,0.15); color: var(--warning); }
-        .badge.no-results { background: rgba(239,68,68,0.15); color: var(--danger); }
-        .answer { white-space: pre-wrap; }
-        .answer strong { color: var(--text); }
-        .citations {
-            margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);
-            font-size: 0.8rem; color: var(--text-muted);
-        }
-        .citations code {
-            background: var(--bg); padding: 0.1rem 0.4rem;
-            border-radius: 4px; font-size: 0.75rem;
-        }
-        .provenance {
-            margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);
-        }
+
+        /* ── Stats Bar ── */
         .stats {
-            display: flex; gap: 2rem; justify-content: center;
-            margin-bottom: 2rem; flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 600ms ease-out 100ms backwards;
         }
-        .stat { text-align: center; }
-        .stat .num { font-size: 1.5rem; font-weight: 600; color: var(--accent); }
-        .stat .label { font-size: 0.75rem; color: var(--text-muted); }
-        footer {
-            text-align: center; margin-top: 3rem; padding-top: 1rem;
-            border-top: 1px solid var(--border); color: var(--text-muted);
+
+        .stat {
+            background: var(--surface);
+            padding: 1.1rem 0.5rem;
+            text-align: center;
+            transition: background var(--transition);
+        }
+
+        .stat:hover { background: var(--surface-hover); }
+
+        .stat .num {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        .stat .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        /* ── Search ── */
+        .search-section {
+            margin-bottom: 1rem;
+            animation: fadeInUp 600ms ease-out 200ms backwards;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color var(--transition);
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.9rem 1rem 0.9rem 2.75rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .search-box input::placeholder { color: var(--text-muted); }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .search-box input:focus + .search-icon,
+        .search-box:focus-within .search-icon {
+            color: var(--accent);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .search-box input:focus ~ button {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .search-box button:hover {
+            background: #8d80ff;
+            transform: translateY(-1px);
+        }
+
+        /* ── Example Chips ── */
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 600ms ease-out 300ms backwards;
+        }
+
+        .examples button {
+            padding: 0.4rem 0.85rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .examples button:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--accent-soft);
+        }
+
+        .examples button:active { transform: scale(0.97); }
+
+        /* ── Results ── */
+        #results {
+            min-height: 200px;
+            animation: fadeInUp 400ms ease-out;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 400ms ease-out;
+        }
+
+        .result-card.grounded {
+            border-color: rgba(52, 211, 153, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(52, 211, 153, 0.15);
+        }
+
+        .result-card.unverified {
+            border-color: rgba(251, 191, 36, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(251, 191, 36, 0.15);
+        }
+
+        .result-card.no-results {
+            border-color: rgba(248, 113, 113, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(248, 113, 113, 0.15);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .badge.grounded { background: var(--success-soft); color: var(--success); }
+        .badge.unverified { background: var(--warning-soft); color: var(--warning); }
+        .badge.no-results { background: var(--danger-soft); color: var(--danger); }
+
+        .badge-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .answer {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text);
+            white-space: pre-wrap;
+        }
+
+        .answer strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .result-meta {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .meta-section {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-section:last-child { margin-bottom: 0; }
+
+        .meta-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .citation-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .citation-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+        }
+
+        .retrieved-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .retrieved-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg);
+            border-radius: var(--radius-sm);
             font-size: 0.8rem;
         }
-        .loading { opacity: 0.5; }
+
+        .retrieved-name {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .retrieved-score {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Loading ── */
+        .loading-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.75rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 700ms linear infinite;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.6;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        footer .footer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1rem 3rem; }
+            header h1 { font-size: 1.75rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .result-card { padding: 1.25rem; }
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+        /* ── Selection ── */
+        ::selection {
+            background: var(--accent-soft);
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="logo">
+                <span class="logo-dot"></span>
+                CA Pilot · Live
+            </div>
             <h1>Family Office Intelligence</h1>
-            <p>California pilot — 44 qualified family office records, discovered via IRS 990-PF + SEC EDGAR 13F</p>
+            <p>Search 44 qualified family office records discovered through IRS 990-PF filings and SEC EDGAR 13F data — every answer grounded in verified public filings.</p>
         </header>
 
         <div class="stats">
-            <div class="stat"><div class="num">44</div><div class="label">Qualified Records</div></div>
-            <div class="stat"><div class="num">2</div><div class="label">Discovery Channels</div></div>
-            <div class="stat"><div class="num">1,474</div><div class="label">Raw Candidates</div></div>
-            <div class="stat"><div class="num">3</div><div class="label">Confidence Tiers</div></div>
+            <div class="stat">
+                <div class="num">44</div>
+                <div class="label">Qualified</div>
+            </div>
+            <div class="stat">
+                <div class="num">2</div>
+                <div class="label">Channels</div>
+            </div>
+            <div class="stat">
+                <div class="num">1,474</div>
+                <div class="label">Discovered</div>
+            </div>
+            <div class="stat">
+                <div class="num">3</div>
+                <div class="label">Tiers</div>
+            </div>
         </div>
 
-        <div class="search-box">
-            <input type="text" id="query" placeholder="Search family offices by name, city, principal, or asset size..." />
-            <button onclick="search()">Search</button>
+        <div class="search-section">
+            <div class="search-box">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="query" placeholder="Search by family name, city, or asset size..." autocomplete="off" />
+                <button onclick="search()">Search</button>
+            </div>
         </div>
 
         <div class="examples">
             <button onclick="quickSearch('family offices in San Francisco')">Family offices in SF</button>
             <button onclick="quickSearch('Who runs the Roberts Foundation?')">Who runs Roberts Foundation?</button>
             <button onclick="quickSearch('What is the AUM of the Gary And Mary West Foundation?')">West Foundation AUM</button>
-            <button onclick="quickSearch('What is the contact email for the Ahmanson Foundation?')">Email for Ahmanson (unverified)</button>
-            <button onclick="quickSearch('single family offices in Palo Alto')">SFOs in Palo Alto</button>
+            <button onclick="quickSearch('What is the contact email for the Ahmanson Foundation?')">Ahmanson email</button>
+            <button onclick="quickSearch('single family offices in Palo Alto')">Palo Alto SFOs</button>
         </div>
 
-        <div id="results"></div>
+        <div id="results">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3">
+                        <path d="M21 21l-4.35-4.35"></path>
+                        <circle cx="11" cy="11" r="8"></circle>
+                    </svg>
+                </div>
+                <p>Ask a question above to search the database. Try one of the example queries to get started.</p>
+            </div>
+        </div>
 
         <footer>
-            Grounding control: retrieval threshold + field-level provenance check.<br>
-            Every answer is constrained to verified data. Unverifiable fields return "could not verify" — never a guess.
+            <div class="footer-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                </svg>
+                Grounded Retrieval
+            </div>
+            <p>Every answer is constrained to verified data from public filings. Unverifiable fields return "could not verify" — never a guess.</p>
         </footer>
     </div>
 
     <script>
+        const resultsDiv = document.getElementById('results');
+        const queryInput = document.getElementById('query');
+
         async function search() {
-            const query = document.getElementById('query').value.trim();
+            const query = queryInput.value.trim();
             if (!query) return;
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<div class="result-card loading">Searching...</div>';
+
+            resultsDiv.innerHTML = `
+                <div class="loading-card">
+                    <div class="spinner"></div>
+                    Searching family office records...
+                </div>
+            `;
 
             try {
                 const resp = await fetch('/api/search?q=' + encodeURIComponent(query));
                 const data = await resp.json();
                 resultsDiv.innerHTML = renderResult(data);
             } catch (err) {
-                resultsDiv.innerHTML = '<div class="result-card no-results">Error: ' + err.message + '</div>';
+                resultsDiv.innerHTML = `
+                    <div class="result-card no-results">
+                        <div class="result-header">
+                            <span class="badge no-results"><span class="badge-dot"></span>Connection Error</span>
+                        </div>
+                        <div class="answer">Something went wrong while searching. Please try again.</div>
+                    </div>
+                `;
             }
         }
 
         function quickSearch(q) {
-            document.getElementById('query').value = q;
+            queryInput.value = q;
             search();
         }
 
         function renderResult(data) {
-            let badgeClass = data.grounded ? 'grounded' :
-                (data.field_status === 'no_retrieval' ? 'no-results' : 'unverified');
-            let badgeText = data.grounded ? 'Grounded' :
-                (data.field_status === 'no_retrieval' ? 'No Results' : 'Could Not Verify');
+            const isGrounded = data.grounded;
+            const isNoResults = data.field_status === 'no_retrieval';
+            const isUnverified = !isGrounded && !isNoResults;
 
-            let html = `<div class="result-card ${badgeClass}">
-                <span class="badge ${badgeClass}">${badgeText}</span>
-                <div class="answer">${formatAnswer(data.answer)}</div>`;
+            const cardClass = isGrounded ? 'grounded' : isNoResults ? 'no-results' : 'unverified';
+            const badgeClass = cardClass;
+            const badgeText = isGrounded ? 'Verified Answer' : isNoResults ? 'No Results' : 'Could Not Verify';
 
+            let html = `<div class="result-card ${cardClass}">
+                <div class="result-header">
+                    <span class="badge ${badgeClass}"><span class="badge-dot"></span>${badgeText}</span>
+                </div>
+                <div class="answer">${formatAnswer(data.answer)}</div>
+            `;
+
+            // Citations
             if (data.citations && data.citations.length > 0) {
-                html += `<div class="citations">Citations: ${data.citations.map(c => '<code>' + c + '</code>').join(' ')}</div>`;
+                html += `<div class="result-meta">
+                    <div class="meta-label">Source Records</div>
+                    <div class="citation-chips">
+                        ${data.citations.map(c => `<span class="citation-chip">${c}</span>`).join('')}
+                    </div>
+                </div>`;
             }
 
+            // Provenance note for unverified fields
             if (data.field_requested && data.field_status === 'could_not_verify') {
-                html += `<div class="provenance">Field "${data.field_requested}" is marked could_not_verify — the record exists but this specific field is not available in public filings.</div>`;
+                html += `<div class="result-meta">
+                    <div class="meta-label">Why we can't verify this</div>
+                    <div class="meta-section">This field is not available in the public IRS and SEC filings used for discovery. It would require checking the organization's website or LinkedIn directly.</div>
+                </div>`;
             }
 
-            if (data.retrieved && data.retrieved.length > 0) {
-                html += '<div class="provenance">Retrieved records:<br>';
-                data.retrieved.forEach(r => {
-                    html += `&nbsp;&nbsp;score=${r.score.toFixed(3)} | ${r.record.entity_name} (confidence ${r.record.confidence_score})<br>`;
-                });
-                html += '</div>';
+            // Retrieved records (only for grounded results)
+            if (data.retrieved && data.retrieved.length > 0 && isGrounded) {
+                html += `<div class="result-meta">
+                    <div class="meta-label">Retrieved from Database</div>
+                    <div class="retrieved-list">
+                        ${data.retrieved.map(r => `
+                            <div class="retrieved-item">
+                                <span class="retrieved-name">${escapeHtml(r.record.entity_name)}</span>
+                                <span class="retrieved-score">${(r.score * 100).toFixed(0)}% match</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>`;
             }
 
             html += '</div>';
@@ -185,13 +657,18 @@
         }
 
         function formatAnswer(text) {
-            // Simple markdown: **bold** and newlines
-            return text
+            return escapeHtml(text)
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
         }
 
-        document.getElementById('query').addEventListener('keypress', e => {
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        queryInput.addEventListener('keypress', e => {
             if (e.key === 'Enter') search();
         });
     </script>

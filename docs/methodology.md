@@ -20,14 +20,31 @@ produce >60% of candidates by the halfway point.
 
 ### Source-mix ratio guard
 
-Tracked live, not at the end. With 2 channels the target is a
-near-even ~50/50 split; if either channel produces
-`> max_single_source_share_at_halfway` (currently 0.60) of candidates
-by the halfway point, work stops and the under-producing channel is
-expanded before continuing. This is enforced in code, not by memory.
+Tracked at TWO points, not just one:
 
-**Achieved ratio (CA pilot, post-discovery):** 52.1% 990pf / 47.9%
-sec_edgar (768 + 706 = 1,474 raw candidates). Within the 0.60 guard.
+1. **Discovery-stage guard** (`max_single_source_share_at_halfway`:
+   0.60): checked mid-run on raw candidate volume. If either channel
+   produces >60% of raw candidates by the halfway point, work stops
+   and the under-producing channel is expanded before continuing.
+
+2. **Post-qualification guard** (`max_single_source_share_final`:
+   0.65): checked AFTER enrichment, on the final qualified set. The
+   discovery-volume ratio can diverge sharply from the final-output
+   ratio after the qualification gate trims — e.g., if 990-PF supplies
+   40+ of the final 50 while SEC EDGAR supplies only its 8 IAPD-
+   verified, the final ratio would be ~84/16, violating the spirit of
+   the brief's rule ("most of your file traces to one source") even
+   though the discovery ratio was balanced. If the post-qualification
+   guard is violated, the under-producing channel must be expanded
+   (wider filter, more states, or a 3rd channel) before delivery.
+
+Both guards are enforced in code (`storage.source_mix_ratio` and
+`storage.source_mix_ratio_qualified`), not by memory.
+
+**Achieved ratios (CA pilot):**
+- Discovery stage: 52.1% 990pf / 47.9% sec_edgar (768 + 706 = 1,474
+  raw candidates). Within the 0.60 guard.
+- Post-qualification: TBD — checked after enrichment runs.
 
 ### SFO-bias
 

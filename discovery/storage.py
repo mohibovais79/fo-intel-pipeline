@@ -166,3 +166,31 @@ def source_mix_ratio(conn: sqlite3.Connection) -> dict[str, float]:
     ).fetchall()
     total = sum(r["n"] for r in rows) or 1
     return {r["discovery_source"]: r["n"] / total for r in rows}
+
+
+def source_mix_ratio_qualified(conn: sqlite3.Connection) -> dict[str, float]:
+    """
+    Post-qualification source-mix audit — called after enrichment to
+    check the FINAL output ratio, not just discovery volume.
+
+    The discovery-volume ratio (52/48 at raw stage) can diverge sharply
+    from the final-output ratio after the qualification gate trims. If
+    990-PF supplies 40+ of the final 50 while SEC EDGAR supplies only
+    its IAPD-verified, the final ratio would be ~84/16 — violating the
+    spirit of the brief's rule ("most of your file traces to one
+    source") even though the discovery ratio was balanced.
+
+    This reads from the qualified_candidates table (populated during
+    enrichment). Returns {source: share} and the max share for guard
+    comparison.
+    """
+    try:
+        rows = conn.execute(
+            "SELECT discovery_source, COUNT(*) AS n "
+            "FROM qualified_candidates GROUP BY discovery_source"
+        ).fetchall()
+    except sqlite3.OperationalError:
+        # qualified_candidates table doesn't exist yet (pre-enrichment)
+        return {}
+    total = sum(r["n"] for r in rows) or 1
+    return {r["discovery_source"]: r["n"] / total for r in rows}

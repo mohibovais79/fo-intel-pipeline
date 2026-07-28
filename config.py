@@ -54,6 +54,18 @@ THRESHOLDS: dict[str, object] = {
     # halfway point, stop and expand the under-producing channel before
     # continuing. Tracked live, not at the end.
     "max_single_source_share_at_halfway": 0.60,
+    # Post-qualification source-mix guard. The discovery-volume ratio
+    # (52/48 at raw stage) can diverge sharply from the final-output
+    # ratio after the qualification gate trims. If 990-PF supplies 40+
+    # of the final 50 while SEC EDGAR supplies only its 8 IAPD-verified,
+    # the final ratio would be ~84/16 — violating the spirit of the
+    # brief's rule ("most of your file traces to one source") even
+    # though the discovery ratio was balanced. This guard is checked
+    # AFTER enrichment, on the final qualified set, not just at
+    # discovery. If violated, the under-producing channel must be
+    # expanded (wider filter, more states, or a 3rd channel) before
+    # delivery.
+    "max_single_source_share_final": 0.65,
 }
 
 # --- ProPublica Nonprofit Explorer API ---

@@ -123,24 +123,49 @@ def _extract_foundation_surname(entity_name: str) -> str | None:
     "Schmidt Family Foundation" -> "Schmidt"
     "Eric And Wendy Schmidt Fund" -> "Schmidt" (last name before Fund)
     "Brin Wojcicki Foundation" -> "Brin" (first of two surnames)
+    "Gordon E And Betty I Moore Foundation" -> "Moore"
+    "Carl Victor Page Memorial Foundation" -> "Page"
+    Returns None for corporate/institutional foundations where no
+    family surname can be confidently extracted.
     """
     if not entity_name:
         return None
     name = entity_name.strip()
-    # Pattern: "X Family Foundation/Fund/Trust"
+
+    # Words that are NOT surnames — generic/institutional words that
+    # appear before "Foundation/Fund/Trust" in non-family foundations
+    NOT_FAMILY_WORDS = {
+        "family", "charitable", "foundation", "fund", "trust", "inc",
+        "llc", "memorial", "private", "heritage", "prize", "bank",
+        "com", "community", "public", "corporate", "company",
+        "institute", "society", "association", "center", "project",
+        "initiative", "program", "endowment", "legacy", "future",
+        "hope", "faith", "grace", "unity", "vision", "dream",
+        "breakthrough", "carestar", "skywords", "new", "land",
+    }
+
+    # Pattern 1: "X Family Foundation/Fund/Trust" — strongest signal
     m = re.search(r"(\w+)\s+Family\s+(?:Foundation|Fund|Trust|Charitable)", name, re.IGNORECASE)
     if m:
-        return m.group(1)
-    # Pattern: "X and Y Z Foundation" -> "Z" (last name before Foundation)
-    m = re.search(r"(\w+)\s+(?:Foundation|Fund|Trust|Charitable)", name, re.IGNORECASE)
+        word = m.group(1)
+        if word.lower() not in NOT_FAMILY_WORDS:
+            return word
+
+    # Pattern 2: "X And Y Z Foundation" or "X Y Z Foundation" -> Z
+    # (last word before Foundation/Fund/Trust, if not generic)
+    m = re.search(r"(\w+)\s+(?:Foundation|Fund|Trust|Charitable|Memorial)", name, re.IGNORECASE)
     if m:
         word = m.group(1)
-        if word.lower() not in {"the", "a", "an", "family", "charitable", "foundation", "fund", "trust", "inc", "llc"}:
+        if word.lower() not in NOT_FAMILY_WORDS:
             return word
-    # Pattern: "... Z Family" -> Z
+
+    # Pattern 3: "... Z Family" (no Foundation after) -> Z
     m = re.search(r"(\w+)\s+Family$", name, re.IGNORECASE)
     if m:
-        return m.group(1)
+        word = m.group(1)
+        if word.lower() not in NOT_FAMILY_WORDS:
+            return word
+
     return None
 
 
@@ -169,33 +194,52 @@ def _extract_13f_firm_surname(firm_name: str) -> str | None:
 
 def build_surname_index(conn: sqlite3.Connection) -> dict[str, list[dict]]:
     """
-    Build a surname index from 990-PF officer names and SEC EDGAR firm names.
+    Build a surname index for cross-channel matching.
+
+    CRITICAL: For 990-PF, only the FOUNDATION FAMILY surname is indexed,
+    NOT every officer's surname. This prevents false matches where an
+    officer named "Hennessy" at the Moore Foundation gets matched to
+    "Hennessy Advisors" (a 13F filer) — that's a collision, not a
+    family-office signal.
+
+    The foundation family surname is extracted from the foundation name
+    (e.g., "Moore Foundation" -> "Moore") and validated against the
+    officer list (at least one officer must share that surname, OR
+    "Family" appears in the foundation name with that surname).
+
     Returns {surname: [{record_id, source, entity_name, ...}]}
     """
     index: dict[str, list[dict]] = {}
 
-    # 990-PF: extract surnames from officer names + foundation names
+    # 990-PF: extract ONLY the foundation family surname
     rows = conn.execute(
         "SELECT record_id, entity_name, officers_json FROM raw_candidates WHERE discovery_source = '990pf'"
     ).fetchall()
     for r in rows:
         officers = json.loads(r["officers_json"]) if r["officers_json"] else []
-        # Collect all surnames from officers
-        surnames = set()
-        for off in officers:
-            sn = _extract_surname(off.get("name", ""))
-            if sn:
-                surnames.add(sn)
-        # Also try the foundation name itself
         foundation_sn = _extract_foundation_surname(r["entity_name"])
-        if foundation_sn:
-            surnames.add(foundation_sn)
-        for sn in surnames:
-            index.setdefault(sn, []).append({
-                "record_id": r["record_id"],
-                "source": "990pf",
-                "entity_name": r["entity_name"],
-            })
+        if not foundation_sn:
+            continue
+
+        # Validate: at least one officer must share the foundation surname,
+        # OR "Family" must be in the foundation name (explicit family structure)
+        officer_sns = {_extract_surname(o.get("name", "")) for o in officers}
+        officer_sns.discard(None)
+        family_in_name = "family" in (r["entity_name"] or "").lower()
+
+        has_corroboration = (
+            foundation_sn in officer_sns
+            or any(s and s.lower() == foundation_sn.lower() for s in officer_sns)
+            or family_in_name
+        )
+        if not has_corroboration:
+            continue
+
+        index.setdefault(foundation_sn, []).append({
+            "record_id": r["record_id"],
+            "source": "990pf",
+            "entity_name": r["entity_name"],
+        })
 
     # SEC EDGAR: extract surnames from firm names
     rows = conn.execute(
@@ -281,6 +325,39 @@ def qualify_sec_edgar_candidate(
     ), 0.0
 
 
+# Known corporate/institutional foundations that are NOT family offices.
+# These are giving vehicles for public companies or institutions, not
+# single-family wealth management entities. Detected by name pattern +
+# this denylist of known corporate foundation names.
+CORPORATE_FOUNDATION_NAMES = {
+    "visa foundation", "salesforce com foundation", "salesforce foundation",
+    "levi strauss foundation", "fremont bank foundation",
+    "breakthrough prize foundation", "carnegie foundation for advancement teaching",
+    "carnegie foundation", "skoll foundation", "visa inc foundation",
+    "google org", "google.org", "microsoft foundation", "apple foundation",
+    "intel foundation", "cisco foundation", "oracle foundation",
+    "meta foundation", "netflix foundation", "adobe foundation",
+    "wells fargo foundation", "bank of america foundation",
+    "goldman sachs foundation", "morgan stanley foundation",
+}
+
+
+def is_corporate_foundation(entity_name: str) -> bool:
+    """
+    Detect corporate/institutional foundations that are NOT family offices.
+    A corporate foundation is a giving vehicle for a public company, not
+    a single-family wealth management entity.
+    """
+    name_lower = (entity_name or "").lower().strip()
+    if name_lower in CORPORATE_FOUNDATION_NAMES:
+        return True
+    # Pattern: "X Bank Foundation" or "X Corporation Foundation"
+    if re.search(r"\b(bank|corporation|corp|inc|llc|company|co)\b.*\b(foundation|fund|trust)\b",
+                 name_lower):
+        return True
+    return False
+
+
 def qualify_990pf_candidate(
     row: sqlite3.Row,
     cross_channel_surnames: set[str],
@@ -312,23 +389,32 @@ def qualify_990pf_candidate(
     entity_name = row["entity_name"] or ""
     assets_m = (row["assets_usd"] or 0) / 1_000_000
 
+    # Corporate foundation filter — these are giving vehicles for public
+    # companies, not single-family wealth management entities
+    if is_corporate_foundation(entity_name):
+        return FOType.UNCLEAR, (
+            f"Corporate/institutional foundation (not a family office). "
+            f"Entity name matches known corporate foundation pattern. "
+            f"This is a company giving vehicle, not single-family wealth."
+        ), 0.0
+
     # Extract officer surnames (filtered for NOT_SURNAMES)
     officer_sns = [_extract_surname(o.get("name", "")) for o in officers]
     officer_sns = [s for s in officer_sns if s]
 
     # --- Tier 1: Cross-channel match ---
-    all_surnames = set(officer_sns)
+    # Only the FOUNDATION family surname is eligible for cross-channel
+    # matching, not every officer's surname. This prevents collisions
+    # where an officer named "Hennessy" at the Moore Foundation gets
+    # matched to "Hennessy Advisors" (a 13F filer).
     foundation_sn = _extract_foundation_surname(entity_name)
-    if foundation_sn:
-        all_surnames.add(foundation_sn)
-    matched = all_surnames & cross_channel_surnames
-    if matched:
-        matched_str = ", ".join(sorted(matched))
+    if foundation_sn and foundation_sn in cross_channel_surnames:
         return FOType.SINGLE_FAMILY, (
-            f"Cross-channel surname match: '{matched_str}' appears in both "
-            f"990-PF (IRS private foundation filing) and SEC 13F filer name. "
-            f"Two independent sources: IRS (family foundation) + SEC "
-            f"(investment management entity). Foundation assets: ${assets_m:.1f}M."
+            f"Cross-channel surname match: '{foundation_sn}' appears in both "
+            f"990-PF (IRS private foundation filing, family surname in name) "
+            f"and SEC 13F filer name. Two independent sources: IRS (family "
+            f"foundation) + SEC (investment management entity). "
+            f"Foundation assets: ${assets_m:.1f}M."
         ), 0.9
 
     # --- Tier 2: 990-PF-only three-way path ---

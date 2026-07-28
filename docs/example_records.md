@@ -1,8 +1,8 @@
 # 3 Fully-Worked Example Records
 
-## Example 1: Gordon E And Betty I Moore Foundation
+## Example 1: Gary And Mary West Charitable Trust
 
-**Record ID:** `990pf-CA-943397785-a7aa7d97`
+**Record ID:** `990pf-CA-873374164-853a6434`
 
 **Discovery source:** 990pf
 
@@ -13,7 +13,7 @@
 
 ### Qualification evidence
 
-Cross-channel surname match: 'HENNESSY' appears in both 990-PF (IRS private foundation filing) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $8766.3M.
+Cross-channel surname match: 'West' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $333.4M.
 
 
 ### Field provenance
@@ -22,17 +22,17 @@ Cross-channel surname match: 'HENNESSY' appears in both 990-PF (IRS private foun
 
 |---|---|---|---|---|
 
-| entity_name | Gordon E And Betty I Moore Foundation | verified | 990pf discovery | filing COVERPAGE/entity name |
+| entity_name | Gary And Mary West Charitable Trust | verified | 990pf discovery | filing COVERPAGE/entity name |
 
-| aum_usd | $8766.3M | verified | IRS Form 990-PF, Part I (revenue/assets summary) | ProPublica /organizations/{ein}.json financial summary field |
+| aum_usd | $333.4M | verified | IRS Form 990-PF, Part I (revenue/assets summary) | ProPublica /organizations/{ein}.json financial summary field |
 
-| city | Palo Alto | verified | 990pf filing | filing address field |
+| city | La Jolla | verified | 990pf filing | filing address field |
 
 | state_region | CA | verified | 990pf filing | filing address field |
 
-| principal_name | Harvey Fineberg | verified | IRS 990-PF XML Part VII | officer name extraction, highest-ranking title |
+| principal_name | Gary West | verified | IRS 990-PF XML Part VII | officer name extraction, highest-ranking title |
 
-| principal_title | Trustee & President | verified | IRS 990-PF XML Part VII | officer title field |
+| principal_title | Trustee | verified | IRS 990-PF XML Part VII | officer title field |
 
 | principal_email | — | could_not_verify | — | Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn |
 
@@ -43,9 +43,9 @@ Cross-channel surname match: 'HENNESSY' appears in both 990-PF (IRS private foun
 
 ### Chain of evidence
 
-1. **Discovery:** Cross-channel surname match: 'HENNESSY' appears in both 990-PF (IRS private foundation filing) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $8766.3M.
+1. **Discovery:** Cross-channel surname match: 'West' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $333.4M.
 
-2. **Qualification:** Cross-channel surname match: 'HENNESSY' appears in both 990-PF (IRS private foundation filing) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $8766.3M.
+2. **Qualification:** Cross-channel surname match: 'West' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $333.4M.
 
 3. **Field verification:** AUM verified from filing data; address verified from filing; principal extracted from officer list; contact fields honestly blank (could_not_verify)
 
@@ -130,9 +130,9 @@ IAPD verified (score=3): family_in_other_names: ['TARBOX FAMILY OFFICE, INC.'], 
 
 | state_region | CA | verified | 990pf filing | filing address field |
 
-| principal_name | Peter Laugharn | verified | IRS 990-PF XML Part VII | officer name extraction, highest-ranking title |
+| principal_name | Hawley Mcauliffe | verified | IRS 990-PF XML Part VII | officer name extraction, highest-ranking title |
 
-| principal_title | President And Ceo | verified | IRS 990-PF XML Part VII | officer title field |
+| principal_title | Chairman | verified | IRS 990-PF XML Part VII | officer title field |
 
 | principal_email | — | could_not_verify | — | Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn |
 

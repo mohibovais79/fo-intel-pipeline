@@ -99,14 +99,36 @@ def _build_aum_verified_field(record: sqlite3.Row) -> VerifiedField:
     return VerifiedField(status=VerificationStatus.COULD_NOT_VERIFY)
 
 
-def _build_principal_from_990pf(officers: list[dict]) -> tuple[str, str, str]:
+def _build_principal_from_990pf(
+    officers: list[dict], foundation_surname: str | None = None
+) -> tuple[str, str, str]:
     """
     Extract principal (highest-ranking officer) from 990-PF officer list.
     Returns (first_name, last_name, title).
+
+    If foundation_surname is provided, prefer officers who share that
+    surname — they're the family principals, not hired staff. A hired
+    president named "Tim Lash" shouldn't be the principal of the
+    "Gary And Mary West Foundation" when Gary West is on the board.
     """
     if not officers:
         return "", "", ""
-    # Sort by title priority
+
+    # If we know the family surname, prefer officers with that surname
+    if foundation_surname:
+        family_officers = [
+            o for o in officers
+            if foundation_surname.lower() in (o.get("name") or "").lower()
+        ]
+        if family_officers:
+            # Sort family officers by title priority
+            sorted_officers = sorted(family_officers, key=lambda o: _title_rank(o.get("title", "")))
+            principal = sorted_officers[0]
+            first, last = _split_name(principal.get("name", ""))
+            title = (principal.get("title") or "").title()
+            return first, last, title
+
+    # Fallback: highest-ranking officer overall
     sorted_officers = sorted(officers, key=lambda o: _title_rank(o.get("title", "")))
     principal = sorted_officers[0]
     first, last = _split_name(principal.get("name", ""))
@@ -141,7 +163,9 @@ def enrich_record(record: sqlite3.Row) -> FamilyOfficeRecord:
 
     # Principal extraction (990-PF only — 13F doesn't have people)
     if source == "990pf" and isinstance(officers, list):
-        first, last, title = _build_principal_from_990pf(officers)
+        from enrichment.qualify import _extract_foundation_surname
+        foundation_sn = _extract_foundation_surname(record["entity_name"])
+        first, last, title = _build_principal_from_990pf(officers, foundation_sn)
     else:
         first, last, title = "", "", ""
 

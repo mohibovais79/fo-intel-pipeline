@@ -16,7 +16,7 @@ produce >60% of candidates by the halfway point.
 | Channel | `DiscoverySource` tag | Status | Notes |
 |---|---|---|---|
 | IRS Form 990-PF (private foundations) | `990pf` | Built — CA pilot | IRS 990 e-file index CSV (filters `RETURN_TYPE=990PF`) intersected with ProPublica's CA 501(c)(3) EIN set → CA private foundations that e-filed. ProPublica `/organizations/{ein}.json` for financials + mailing address. Pre-XML noise filter: name-keyword exclusion of operating-charity supporting foundations (hospital/university/church). Raw 990-PF XML from GivingTuesday 990 Data Lake for officer/trustee name + title extraction. Post-XML filter: soft fingerprint score (shared surname +2, small board +1, medium board 0, large board -1, attached schedule +1, no officers -2; pass threshold >= 1). Paper-filed returns with no XML are flagged as a known blind spot. Full pivot history in `docs/pivot_log.md`. |
-| SEC EDGAR (13F / Form D / ADV full-text) | `sec_edgar` | Planned | 13F filers >$100M AUM; ADV Part 2A brochure text used to confirm "manages family capital" vs "advises third-party clients" |
+| SEC EDGAR (13F + IAPD/ADV structured fields) | `sec_edgar` | Built — CA pilot | SEC quarterly 13F bulk data sets (pre-parsed TSVs from EDGAR XML). 13F-HR only (not 13F-NT notices). Aggregated at firm level (not per-accession, to avoid fund-vehicle double-counting). Discovery filter empirically derived from inspection of known family offices vs hedge funds (pivot 6): CA HQ, 10-500 holdings (excludes PE/VC vehicles at 1-5; excludes quant/multi-strat funds at 1000+ — Cascade/Bill Gates FO = 146 holdings vs Citadel 15,551), AUM $25M-$5B, exclude names matching EXCLUDE_NAMES.txt. IAPD structured-field verification as secondary signal: ERA registration (+2), "family" in otherNames/firm name (+1), small relying-advisor count ≤5 (+1). ADV Part 2A brochure text not accessible via public API (pivot 6) — deferred to future headless-browser improvement. 706 CA candidates, 8 IAPD-verified. |
 
 ### Source-mix ratio guard
 
@@ -25,6 +25,9 @@ near-even ~50/50 split; if either channel produces
 `> max_single_source_share_at_halfway` (currently 0.60) of candidates
 by the halfway point, work stops and the under-producing channel is
 expanded before continuing. This is enforced in code, not by memory.
+
+**Achieved ratio (CA pilot, post-discovery):** 52.1% 990pf / 47.9%
+sec_edgar (768 + 706 = 1,474 raw candidates). Within the 0.60 guard.
 
 ### SFO-bias
 
@@ -58,9 +61,13 @@ explicitly the most serious error type.
 Substring match against `EXCLUDE_NAMES.txt`. If `entity_name` contains
 any excluded token, the record is auto-rejected with reason
 `excluded_institutional_manager` and routed to `ExcludedCandidate`
-(audit pool, not delivery). Secondary check via ADV Part 2A brochure
-text: if the firm's own ADV says it does not manage family capital or
-serves third-party investors exclusively, exclude.
+(audit pool, not delivery). For SEC EDGAR candidates, secondary check
+via IAPD structured fields: large relying-advisor count (>10) flags
+institutional pattern; ERA registration + "family" in name confirms
+family-office pattern. ADV Part 2A brochure text verification (the
+strongest affirmative "manages family capital" signal) is a known gap
+— not accessible via public API, deferred to future headless-browser
+improvement (see `docs/pivot_log.md` pivot 6).
 
 ### Thresholds
 
@@ -174,3 +181,23 @@ Updated as the pipeline surfaces them. Initial set:
   recoverable via manual review; false negatives (an institutional firm
   that ships as an SFO) are disqualifying, so the list is intentionally
   conservative.
+- **ADV Part 2A brochure text is not accessible via public API.** The
+  IAPD system serves brochures through a JS-rendered SPA, not a
+  programmatic endpoint. The 2024 ADV amendment's structured Item 5.D
+  "family offices" client-type checkbox (which would have been the
+  cleanest signal) is not exposed through `api.adviserinfo.sec.gov`.
+  ADV forms are not in EDGAR full-text search (filed through IARD, not
+  EDGAR). Current SEC EDGAR verification uses 13F portfolio
+  concentration (empirically validated) + IAPD structured metadata
+  (ERA status, otherNames, relying-advisor count) as a 2-signal proxy.
+  A headless-browser approach (Playwright + pdfplumber + LLM
+  classification on Item 7 client types) is the path to the full
+  brochure text — deferred to after the RAG layer. See
+  `docs/pivot_log.md` pivot 6.
+- **13F discovery misses non-13F filers.** Family offices managing
+  <$100M in 13(f) securities don't file 13F at all. This channel
+  structurally misses smaller SFOs that hold wealth in real estate,
+  private company stock, or other non-13(f) assets. The 990-PF channel
+  partially compensates (foundations file regardless of investment
+  asset mix), but families without a private foundation and without
+  $100M+ in exchange-traded equities are invisible to both channels.

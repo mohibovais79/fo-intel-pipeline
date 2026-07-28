@@ -38,12 +38,12 @@ FIELD_KEYWORDS = {
     "phone": ["phone", "telephone", "call", "number"],
     "website": ["website", "url", "domain", "web"],
     "linkedin": ["linkedin"],
-    "address": ["address", "location", "office", "where"],
+    "address": ["address", "location", "where is", "where are", "located"],
     "aum": ["aum", "assets", "under management", "how much", "fund size", "money"],
     "principal": ["who runs", "who manages", "principal", "ceo", "founder",
                   "who is", "who's", "leadership", "head of"],
-    "fo_type": ["family office", "sfo", "mfo", "single family", "multi family",
-                "what type", "what kind"],
+    "fo_type": ["sfo", "mfo", "single family", "multi family",
+                "what type", "what kind", "is this a family office"],
 }
 
 
@@ -189,6 +189,51 @@ class FamilyOfficeRAG:
                     "evidence": record.get("fo_type_evidence")}
         return {"status": "could_not_verify"}
 
+    def _format_record_brief(self, rec: dict) -> str:
+        """Format a record as a natural-language one-liner for lists."""
+        parts = [f"**{rec['entity_name']}**"]
+        aum = rec.get("aum_usd", {})
+        if aum and aum.get("value"):
+            aum_m = int(aum["value"]) / 1e6
+            if aum_m >= 1000:
+                parts.append(f"managing ${aum_m/1000:.1f} billion")
+            else:
+                parts.append(f"managing ${aum_m:.0f} million")
+        if rec.get("principal_first_name"):
+            parts.append(f"led by {rec['principal_first_name']} {rec.get('principal_last_name','')}")
+        if rec.get("city"):
+            parts.append(f"in {rec['city']}, {rec.get('state_region','CA')}")
+        return " — ".join(parts)
+
+    def _format_single_record(self, rec: dict) -> str:
+        """Format a single record as a natural-language paragraph."""
+        lines = [f"**{rec['entity_name']}**"]
+        aum = rec.get("aum_usd", {})
+        if aum and aum.get("value"):
+            aum_m = int(aum["value"]) / 1e6
+            if aum_m >= 1000:
+                lines.append(f"Manages approximately ${aum_m/1000:.1f} billion in assets")
+            else:
+                lines.append(f"Manages approximately ${aum_m:.0f} million in assets")
+        if rec.get("principal_first_name"):
+            name = f"{rec['principal_first_name']} {rec.get('principal_last_name','')}"
+            title = rec.get("principal_title", "")
+            if title:
+                lines.append(f"Key contact: {name} ({title})")
+            else:
+                lines.append(f"Key contact: {name}")
+        if rec.get("city"):
+            lines.append(f"Located in {rec['city']}, {rec.get('state_region','CA')}")
+        fo_type = rec.get("fo_type", "").replace("_", " ")
+        lines.append(f"Classified as a {fo_type}")
+        # Discovery source in plain English
+        source = rec.get("discovery_source", "")
+        if source == "990pf":
+            lines.append("Discovered via IRS private foundation filing")
+        elif source == "sec_edgar":
+            lines.append("Discovered via SEC 13F investment filing")
+        return "\n\n".join(lines)
+
     def answer(self, query: str) -> dict:
         """
         Answer a query with grounding control.
@@ -211,9 +256,10 @@ class FamilyOfficeRAG:
             return {
                 "query": query,
                 "answer": (
-                    "I couldn't find any family office records matching "
-                    "your query. Try searching by family name, foundation "
-                    "name, city, or asset size."
+                    "I couldn't find any family offices matching your search. "
+                    "Try searching by family name (e.g. \"West Foundation\"), "
+                    "city (e.g. \"family offices in San Francisco\"), or "
+                    "asset size (e.g. \"largest family offices in California\")."
                 ),
                 "grounded": False,
                 "retrieved": [],
@@ -233,16 +279,21 @@ class FamilyOfficeRAG:
             if field_info["status"] != "verified":
                 # Record exists but the specific field is unverified
                 # This is the critical grounding control — don't hallucinate
-                field_label = field_requested.replace("_", " ")
+                field_labels = {
+                    "email": "contact email",
+                    "phone": "phone number",
+                    "website": "website",
+                    "linkedin": "LinkedIn profile",
+                }
+                field_label = field_labels.get(field_requested, field_requested.replace("_", " "))
                 return {
                     "query": query,
                     "answer": (
-                        f"I found {top_record['entity_name']} in our records, "
-                        f"but I could not verify the {field_label}. "
-                        f"This field is marked 'could_not_verify' — the "
-                        f"information is not available in public IRS 990-PF "
-                        f"or SEC 13F filings and would require additional "
-                        f"research (website scrape, LinkedIn, etc.)."
+                        f"I found {top_record['entity_name']} in our database, "
+                        f"but I don't have a verified {field_label} for them. "
+                        f"This information isn't available in the public tax "
+                        f"and SEC filings we used for discovery — it would "
+                        f"require checking their website or LinkedIn directly."
                     ),
                     "grounded": False,
                     "retrieved": results,
@@ -251,30 +302,64 @@ class FamilyOfficeRAG:
                     "citations": [top_record["record_id"]],
                 }
 
-        # Build grounded answer from retrieved records
-        answer_parts = []
-        citations = []
-        for r in results:
-            rec = r["record"]
-            citations.append(rec["record_id"])
-            aum = rec.get("aum_usd", {})
-            aum_str = ""
-            if aum and aum.get("value"):
-                aum_str = f" | Assets: ${int(aum['value'])/1e6:.1f}M"
-            principal = ""
-            if rec.get("principal_first_name"):
-                principal = f" | Principal: {rec['principal_first_name']} {rec.get('principal_last_name','')}"
-            answer_parts.append(
-                f"- **{rec['entity_name']}** ({rec['discovery_source']}, "
-                f"confidence {rec['confidence_score']}){aum_str}{principal} "
-                f"| {rec.get('city','')}, {rec.get('state_region','')}"
-            )
+        # Build grounded answer — natural language, not debug dump
+        citations = [r["record"]["record_id"] for r in results]
 
-        answer = f"Found {len(results)} matching records:\n\n" + "\n".join(answer_parts)
+        # If asking about a specific field, give a direct answer
         if field_requested and results:
             field_info = self._get_field_value(results[0]["record"], field_requested)
-            if field_info["status"] == "verified" and field_info.get("value"):
-                answer += f"\n\n**{field_requested.replace('_',' ').title()}:** {field_info['value']}"
+            if field_info["status"] == "verified":
+                rec = results[0]["record"]
+                if field_requested == "principal":
+                    name = field_info.get("value", "")
+                    title = field_info.get("title", "")
+                    title_str = f", {title}" if title else ""
+                    answer = f"{name}{title_str} is the key contact for {rec['entity_name']}."
+                    if len(results) > 1:
+                        answer += f"\n\nI also found {len(results)-1} other related record(s) in the database."
+                    return {
+                        "query": query, "answer": answer, "grounded": True,
+                        "retrieved": results, "field_requested": field_requested,
+                        "field_status": "verified", "citations": citations,
+                    }
+                elif field_requested == "aum":
+                    aum_m = int(field_info["value"]) / 1e6
+                    answer = f"{rec['entity_name']} manages approximately ${aum_m:.1f} million in assets."
+                    if len(results) > 1:
+                        answer += f"\n\nI also found {len(results)-1} other related record(s)."
+                    return {
+                        "query": query, "answer": answer, "grounded": True,
+                        "retrieved": results, "field_requested": field_requested,
+                        "field_status": "verified", "citations": citations,
+                    }
+                elif field_requested == "address":
+                    addr = field_info.get("value", "")
+                    answer = f"{rec['entity_name']} is located at {addr}."
+                    if len(results) > 1:
+                        answer += f"\n\nI also found {len(results)-1} other family office(s) matching your search."
+                    return {
+                        "query": query, "answer": answer, "grounded": True,
+                        "retrieved": results, "field_requested": field_requested,
+                        "field_status": "verified", "citations": citations,
+                    }
+                elif field_requested == "fo_type":
+                    fo_type = field_info.get("value", "").replace("_", " ")
+                    answer = f"{rec['entity_name']} is classified as a {fo_type}."
+                    return {
+                        "query": query, "answer": answer, "grounded": True,
+                        "retrieved": results, "field_requested": field_requested,
+                        "field_status": "verified", "citations": citations,
+                    }
+
+        # General search — list results in natural language
+        if len(results) == 1:
+            rec = results[0]["record"]
+            answer = self._format_single_record(rec)
+        else:
+            answer = f"Here are {len(results)} family offices matching your search:\n\n"
+            for i, r in enumerate(results, 1):
+                rec = r["record"]
+                answer += f"{i}. {self._format_record_brief(rec)}\n"
 
         return {
             "query": query,

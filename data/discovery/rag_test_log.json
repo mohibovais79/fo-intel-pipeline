@@ -1,7 +1,7 @@
 [
   {
     "query": "quantum computing startups in Berlin",
-    "answer": "I couldn't find any family office records matching your query. Try searching by family name, foundation name, city, or asset size.",
+    "answer": "I couldn't find any family offices matching your search. Try searching by family name (e.g. \"West Foundation\"), city (e.g. \"family offices in San Francisco\"), or asset size (e.g. \"largest family offices in California\").",
     "grounded": false,
     "retrieved": [],
     "field_requested": null,
@@ -10,7 +10,7 @@
   },
   {
     "query": "What is the contact email for the Ahmanson Foundation?",
-    "answer": "I found The Ahmanson Foundation in our records, but I could not verify the email. This field is marked 'could_not_verify' \u2014 the information is not available in public IRS 990-PF or SEC 13F filings and would require additional research (website scrape, LinkedIn, etc.).",
+    "answer": "I found The Ahmanson Foundation in our database, but I don't have a verified contact email for them. This information isn't available in the public tax and SEC filings we used for discovery \u2014 it would require checking their website or LinkedIn directly.",
     "grounded": false,
     "retrieved": [
       {
@@ -61,7 +61,7 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.5668408274650574,
+        "score": 0.7668408155441284,
         "rank": 1
       },
       {
@@ -175,7 +175,7 @@
   },
   {
     "query": "What is the phone number for the Harrington Family Foundation?",
-    "answer": "I found Harrington Family Foundation in our records, but I could not verify the phone. This field is marked 'could_not_verify' \u2014 the information is not available in public IRS 990-PF or SEC 13F filings and would require additional research (website scrape, LinkedIn, etc.).",
+    "answer": "I found Harrington Family Foundation in our database, but I don't have a verified phone number for them. This information isn't available in the public tax and SEC filings we used for discovery \u2014 it would require checking their website or LinkedIn directly.",
     "grounded": false,
     "retrieved": [
       {
@@ -226,7 +226,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.6894840002059937,
+        "score": 0.8894839882850647,
         "rank": 1
       },
       {
@@ -340,7 +340,7 @@
   },
   {
     "query": "family offices in San Francisco",
-    "answer": "Found 3 matching records:\n\n- **Sergey Brin Family Foundation** (990pf, confidence 0.65) | Assets: $4070.4M | Principal: Sergey Brin | San Francisco, CA\n- **Skyline Foundation** (990pf, confidence 0.65) | Assets: $1046.9M | Principal: David Filo | San Francisco, CA\n- **Harrington Family Foundation** (990pf, confidence 0.9) | Assets: $11.9M | Principal: Thomas Harrington | Los Altos, CA\n\n**Address:** 1660 BUSH STREET 300, San Francisco, CA",
+    "answer": "Here are 3 family offices matching your search:\n\n1. **Sergey Brin Family Foundation** \u2014 managing $4.1 billion \u2014 led by Sergey Brin \u2014 in San Francisco, CA\n2. **Skyline Foundation** \u2014 managing $1.0 billion \u2014 led by David Filo \u2014 in San Francisco, CA\n3. **Harrington Family Foundation** \u2014 managing $12 million \u2014 led by Thomas Harrington \u2014 in Los Altos, CA\n",
     "grounded": true,
     "retrieved": [
       {
@@ -497,8 +497,8 @@
         "rank": 3
       }
     ],
-    "field_requested": "address",
-    "field_status": "verified",
+    "field_requested": null,
+    "field_status": "n/a",
     "citations": [
       "990pf-CA-472107200-54c06dcb",
       "990pf-CA-943380194-663da49f",
@@ -507,9 +507,60 @@
   },
   {
     "query": "Who runs the Roberts Foundation?",
-    "answer": "Found 3 matching records:\n\n- **The Hearthland Foundation** (990pf, confidence 0.65) | Assets: $449.5M | Principal: Gerald Breslauer | Los Angeles, CA\n- **Roberts Foundation** (990pf, confidence 0.9) | Assets: $267.1M | Principal: George Roberts | San Mateo, CA\n- **The California Endowment** (990pf, confidence 0.65) | Assets: $4318.8M | Principal: Robert Ross | Los Angeles, CA\n\n**Principal:** Gerald Breslauer",
+    "answer": "George Roberts, President is the key contact for Roberts Foundation.\n\nI also found 2 other related record(s) in the database.",
     "grounded": true,
     "retrieved": [
+      {
+        "record": {
+          "record_id": "990pf-CA-942967074-a921b795",
+          "discovery_source": "990pf",
+          "discovery_note": "Cross-channel surname match: 'Roberts' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $267.1M.",
+          "state_targeting": "CA",
+          "fo_type": "single_family_office",
+          "fo_type_evidence": "Cross-channel surname match: 'Roberts' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $267.1M.",
+          "entity_name": "Roberts Foundation",
+          "description": null,
+          "investment_thesis": null,
+          "investing_sectors": [],
+          "domain": null,
+          "website": null,
+          "corporate_linkedin": null,
+          "street_address": "155 BOVET RD STE 770",
+          "city": "San Mateo",
+          "state_region": "CA",
+          "country": "United States",
+          "aum_usd": {
+            "value": "267051553",
+            "status": "verified",
+            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
+            "method": "ProPublica /organizations/{ein}.json financial summary field",
+            "checked_on": "2026-07-28"
+          },
+          "aum_as_of": "2026-07-28",
+          "principal_first_name": "George",
+          "principal_last_name": "Roberts",
+          "principal_title": "President",
+          "principal_linkedin": null,
+          "principal_email": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "principal_phone": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "recent_activity": [],
+          "confidence_score": 0.9
+        },
+        "score": 0.733192503452301,
+        "rank": 1
+      },
       {
         "record": {
           "record_id": "990pf-CA-954016320-2d0e81b3",
@@ -559,57 +610,6 @@
           "confidence_score": 0.65
         },
         "score": 0.5339906811714172,
-        "rank": 1
-      },
-      {
-        "record": {
-          "record_id": "990pf-CA-942967074-a921b795",
-          "discovery_source": "990pf",
-          "discovery_note": "Cross-channel surname match: 'Roberts' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $267.1M.",
-          "state_targeting": "CA",
-          "fo_type": "single_family_office",
-          "fo_type_evidence": "Cross-channel surname match: 'Roberts' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $267.1M.",
-          "entity_name": "Roberts Foundation",
-          "description": null,
-          "investment_thesis": null,
-          "investing_sectors": [],
-          "domain": null,
-          "website": null,
-          "corporate_linkedin": null,
-          "street_address": "155 BOVET RD STE 770",
-          "city": "San Mateo",
-          "state_region": "CA",
-          "country": "United States",
-          "aum_usd": {
-            "value": "267051553",
-            "status": "verified",
-            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
-            "method": "ProPublica /organizations/{ein}.json financial summary field",
-            "checked_on": "2026-07-28"
-          },
-          "aum_as_of": "2026-07-28",
-          "principal_first_name": "George",
-          "principal_last_name": "Roberts",
-          "principal_title": "President",
-          "principal_linkedin": null,
-          "principal_email": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "principal_phone": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "recent_activity": [],
-          "confidence_score": 0.9
-        },
-        "score": 0.53319251537323,
         "rank": 2
       },
       {
@@ -667,14 +667,14 @@
     "field_requested": "principal",
     "field_status": "verified",
     "citations": [
-      "990pf-CA-954016320-2d0e81b3",
       "990pf-CA-942967074-a921b795",
+      "990pf-CA-954016320-2d0e81b3",
       "990pf-CA-954523232-4a660faa"
     ]
   },
   {
     "query": "What is the AUM of the Gary And Mary West Foundation?",
-    "answer": "Found 3 matching records:\n\n- **Gary And Mary West Charitable Trust** (990pf, confidence 0.9) | Assets: $333.4M | Principal: Gary West | La Jolla, CA\n- **Gary And Mary West Foundation** (990pf, confidence 0.9) | Assets: $155.0M | Principal: Gary West | La Jolla, CA\n- **Evelyn And Walter Haas Jr Fund** (990pf, confidence 0.65) | Assets: $469.1M | Principal: Cathy Cha | San Francisco, CA\n\n**Aum:** 333413300",
+    "answer": "Gary And Mary West Charitable Trust manages approximately $333.4 million in assets.\n\nI also found 2 other related record(s).",
     "grounded": true,
     "retrieved": [
       {
@@ -725,7 +725,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.5679253339767456,
+        "score": 0.7679253220558167,
         "rank": 1
       },
       {
@@ -776,7 +776,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.5630677342414856,
+        "score": 0.7630677223205566,
         "rank": 2
       },
       {
@@ -841,7 +841,7 @@
   },
   {
     "query": "single family offices in Palo Alto",
-    "answer": "Found 3 matching records:\n\n- **Koum Family Foundation** (990pf, confidence 0.65) | Assets: $2328.7M | Principal: Jan Koum | Palo Alto, CA\n- **Waverley Street Foundation** (990pf, confidence 0.65) | Assets: $2784.0M | Principal: Jared Blumenfeld | Palo Alto, CA\n- **Harrington Family Foundation** (990pf, confidence 0.9) | Assets: $11.9M | Principal: Thomas Harrington | Los Altos, CA\n\n**Address:** 1801 PAGE MILL RD STE 100, Palo Alto, CA",
+    "answer": "Koum Family Foundation is classified as a single family office.",
     "grounded": true,
     "retrieved": [
       {
@@ -998,7 +998,7 @@
         "rank": 3
       }
     ],
-    "field_requested": "address",
+    "field_requested": "fo_type",
     "field_status": "verified",
     "citations": [
       "990pf-CA-475446562-b616b9fd",

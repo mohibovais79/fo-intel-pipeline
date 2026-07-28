@@ -2,8 +2,14 @@
 fo-intel-pipeline — RAG layer with field-level provenance grounding
 
 Architecture:
-  1. Embed the 44 enriched records using sentence-transformers
-  2. Semantic retrieval: cosine similarity over record text
+  1. Record embeddings are pre-computed offline (rag/embed_offline.py)
+     using fastembed (BAAI/bge-small-en-v1.5, ONNX runtime) and saved
+     as a static .npy file. The deployed app loads this .npy at startup
+     — it never re-embeds the dataset.
+  2. At request time, only the incoming query is embedded (one small
+     string) using a module-level fastembed singleton. Retrieval is
+     cosine similarity (dot product, since vectors are L2-normalized)
+     between the query vector and the pre-computed record matrix.
   3. Grounding control (two layers):
      a. Retrieval threshold: if no records above similarity threshold,
         force "insufficient evidence" response
@@ -21,6 +27,16 @@ Architecture:
 Grounding is enforced in code, not via system prompt. The response
 generator is template-based (not free-form LLM) to eliminate
 hallucination surface area entirely for this pilot.
+
+Memory budget on 512MB cloud instance:
+  - fastembed ONNX runtime + bge-small model: ~100-150MB
+  - FastAPI + uvicorn baseline: ~50-80MB
+  - 44 x 384 float32 embeddings: ~67KB (negligible)
+  - Total: ~200-250MB, well under the 512MB ceiling
+
+Pre-computing record embeddings offline is what makes this fit —
+the previous approach (sentence-transformers re-embedding on boot)
+hit 500-600MB just importing torch and OOMed.
 """
 
 from __future__ import annotations
@@ -30,7 +46,22 @@ import re
 from pathlib import Path
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
+
+# Must match the model used in rag/embed_offline.py
+EMBED_MODEL = "BAAI/bge-small-en-v1.5"
+
+# Module-level singleton — loaded once, reused across requests.
+# This avoids re-allocating the ONNX model on every query.
+_model: TextEmbedding | None = None
+
+
+def _get_model() -> TextEmbedding:
+    """Lazy-load the fastembed model as a singleton."""
+    global _model
+    if _model is None:
+        _model = TextEmbedding(model_name=EMBED_MODEL)
+    return _model
 
 # Field keywords that map queries to specific VerifiedField fields
 FIELD_KEYWORDS = {
@@ -70,35 +101,49 @@ def _build_record_text(record: dict) -> str:
 class FamilyOfficeRAG:
     """RAG system with field-level provenance grounding."""
 
-    def __init__(self, records_path: str | None = None):
+    def __init__(self, records_path: str | None = None, embeddings_path: str | None = None):
         self.records: list[dict] = []
         self.embeddings: np.ndarray | None = None
-        self.model: SentenceTransformer | None = None
-        # Resolve path relative to project root (two levels up from this file)
+        # Resolve paths relative to project root (one level up from this file)
+        project_root = Path(__file__).resolve().parent.parent
         if records_path is None:
-            project_root = Path(__file__).resolve().parent.parent
             records_path = str(project_root / "data" / "discovery" / "final_enriched.jsonl")
+        if embeddings_path is None:
+            embeddings_path = str(project_root / "data" / "discovery" / "record_embeddings.npy")
         self.records_path = records_path
+        self.embeddings_path = embeddings_path
 
     def load(self):
-        """Load records and build embeddings."""
+        """Load records and pre-computed embeddings.
+
+        Record embeddings are pre-computed offline by rag/embed_offline.py
+        and stored as a static .npy file. We do NOT re-embed the dataset
+        here — that would require loading the full model and re-encoding
+        44 records on every boot, which is wasteful and caused OOM on
+        the cloud instance with sentence-transformers.
+
+        The fastembed model is loaded lazily on first query (see _get_model),
+        not at boot, so startup is fast and memory ramps up only when needed.
+        """
         with open(self.records_path) as f:
             self.records = [json.loads(line) for line in f]
 
-        # Build text for each record
-        texts = [_build_record_text(r) for r in self.records]
-
-        # Load model and embed
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.embeddings = self.model.encode(
-            texts, convert_to_numpy=True, normalize_embeddings=True
-        )
+        self.embeddings = np.load(self.embeddings_path)
+        if self.embeddings.shape[0] != len(self.records):
+            raise RuntimeError(
+                f"Embedding count ({self.embeddings.shape[0]}) != record count "
+                f"({len(self.records)}). Re-run rag/embed_offline.py to regenerate."
+            )
         return self
 
-    def retrieve(self, query: str, top_k: int = 5, threshold: float = 0.3) -> list[dict]:
+    def retrieve(self, query: str, top_k: int = 5, threshold: float = 0.58) -> list[dict]:
         """
-        Retrieve top-k records by semantic similarity.
+        Retrieve top-k records by cosine similarity.
         Returns records with similarity score, filtered by threshold.
+
+        At request time, only the query is embedded (one small string)
+        using the fastembed singleton. The record embeddings are
+        pre-computed and loaded from .npy, so this is just a dot product.
 
         Includes a keyword boost: if the query contains an exact entity
         name substring, that record's score is boosted by 0.2. This
@@ -106,13 +151,18 @@ class FamilyOfficeRAG:
         retrieves a different foundation because "who runs" adds
         semantic weight that outweighs the name match.
         """
-        if self.model is None or self.embeddings is None:
+        if self.embeddings is None:
             raise RuntimeError("RAG not loaded. Call .load() first.")
 
-        query_emb = self.model.encode(
-            [query], convert_to_numpy=True, normalize_embeddings=True
-        )
-        scores = (self.embeddings @ query_emb.T).flatten()
+        # Embed only the query — records are pre-computed
+        model = _get_model()
+        query_vec = np.array(next(model.embed([query])), dtype=np.float32)
+        # L2-normalize query so dot product = cosine similarity
+        norm = np.linalg.norm(query_vec)
+        if norm > 0:
+            query_vec = query_vec / norm
+
+        scores = (self.embeddings @ query_vec).flatten()
 
         # Keyword boost for exact entity name matches
         query_lower = query.lower()
@@ -254,7 +304,7 @@ class FamilyOfficeRAG:
         }
         """
         # Layer 1: retrieval
-        results = self.retrieve(query, top_k=3, threshold=0.3)
+        results = self.retrieve(query, top_k=3, threshold=0.58)
 
         if not results:
             return {

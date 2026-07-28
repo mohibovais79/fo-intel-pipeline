@@ -61,39 +61,39 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.7668408155441284,
+        "score": 0.8775390982627869,
         "rank": 1
       },
       {
         "record": {
-          "record_id": "990pf-CA-770348912-52e1384c",
+          "record_id": "990pf-CA-943100217-86bcac82",
           "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'SONSINI' + 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $876.7M. Single source (IRS only), lower confidence tier.",
+          "discovery_note": "990-PF-only Tier 2: shared surname 'MCAULIFFE'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $7099.7M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'SONSINI' + 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $876.7M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "Sobrato Family Foundation",
+          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'MCAULIFFE'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $7099.7M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Conrad N Hilton Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "599 CASTRO ST STE 400",
-          "city": "Mountain View",
+          "street_address": "1 DOLE DR",
+          "city": "Westlake Vlg",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "876730998",
+            "value": "7099706570",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "John",
-          "principal_last_name": "Sobrato",
-          "principal_title": "Chair Emeritus",
+          "principal_first_name": "Hawley",
+          "principal_last_name": "Mcauliffe",
+          "principal_title": "Chairman",
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -112,39 +112,39 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.44310298562049866,
+        "score": 0.6081929206848145,
         "rank": 2
       },
       {
         "record": {
-          "record_id": "990pf-CA-954016320-2d0e81b3",
+          "record_id": "990pf-CA-943362163-c9459072",
           "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'SPIELBERG'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $449.5M. Single source (IRS only), lower confidence tier.",
+          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $260.0M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'SPIELBERG'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $449.5M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "The Hearthland Foundation",
+          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $260.0M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "The Duffield Family Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "11400 W OLYMPIC BLVD STE 550",
-          "city": "Los Angeles",
+          "street_address": "6150 STONERIDGE MALL RD STE 125",
+          "city": "Pleasanton",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "449478631",
+            "value": "259973566",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Gerald",
-          "principal_last_name": "Breslauer",
-          "principal_title": "President, Director",
+          "principal_first_name": "Michael",
+          "principal_last_name": "Duffield",
+          "principal_title": "Board Member",
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -163,7 +163,7 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.43859362602233887,
+        "score": 0.59755939245224,
         "rank": 3
       }
     ],
@@ -226,7 +226,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.8894839882850647,
+        "score": 0.9287906289100647,
         "rank": 1
       },
       {
@@ -277,39 +277,39 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.516525149345398,
+        "score": 0.6545244455337524,
         "rank": 2
       },
       {
         "record": {
-          "record_id": "990pf-CA-770456449-818565c0",
+          "record_id": "990pf-CA-200882784-9fad7d4c",
           "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'KRIENS'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $226.8M. Single source (IRS only), lower confidence tier.",
+          "discovery_note": "990-PF-only Tier 2: shared surname 'STUART'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $518.1M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'KRIENS'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $226.8M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "The 1440 Foundation",
+          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'STUART'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $518.1M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Elbridge Stuart Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "PO BOX 3141",
-          "city": "Saratoga",
+          "street_address": "500 WASHINGTON ST 8TH FL",
+          "city": "San Francisco",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "226837472",
+            "value": "518066379",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Joan",
-          "principal_last_name": "Kriens",
-          "principal_title": "President",
+          "principal_first_name": "Dwight",
+          "principal_last_name": "Stuart",
+          "principal_title": "Chair & Dir.",
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -328,7 +328,7 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.5140520334243774,
+        "score": 0.643966794013977,
         "rank": 3
       }
     ],
@@ -340,141 +340,39 @@
   },
   {
     "query": "family offices in San Francisco",
-    "answer": "Here are 3 family offices matching your search:\n\n1. **Sergey Brin Family Foundation** \u2014 managing $4.1 billion \u2014 led by Sergey Brin \u2014 in San Francisco, CA\n2. **Skyline Foundation** \u2014 managing $1.0 billion \u2014 led by David Filo \u2014 in San Francisco, CA\n3. **Harrington Family Foundation** \u2014 managing $12 million \u2014 led by Thomas Harrington \u2014 in Los Altos, CA\n",
+    "answer": "Here are 3 family offices matching your search:\n\n1. **Pivotal bioVenture Partners Investment Advisor LLC** \u2014 managing $124 million \u2014 in SAN FRANCISCO, CA\n2. **Sandberg Goldberg Bernthal Family Charitable Foundation** \u2014 managing $211 million \u2014 led by Thomas Bernthal \u2014 in San Francisco, CA\n3. **CADEN CAPITAL PARTNERS, LP** \u2014 managing $324 million \u2014 in SANTA MONICA, CA\n",
     "grounded": true,
     "retrieved": [
       {
         "record": {
-          "record_id": "990pf-CA-472107200-54c06dcb",
-          "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'BRIN' + 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $4070.4M. Single source (IRS only), lower confidence tier.",
+          "record_id": "sec-ca-000287988-Pivotal-bioVenture-Partners-In-55f16346",
+          "discovery_source": "sec_edgar",
+          "discovery_note": "ERA-registered (SEC family office exemption, Rule 202(a)(11)(G)-1). 13F-HR filing confirms manages $123.6M in 13(f) securities. Two independent SEC filings (13F + ADV/ERA). Portfolio: 11 holdings.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'BRIN' + 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $4070.4M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "Sergey Brin Family Foundation",
+          "fo_type_evidence": "ERA-registered (SEC family office exemption, Rule 202(a)(11)(G)-1). 13F-HR filing confirms manages $123.6M in 13(f) securities. Two independent SEC filings (13F + ADV/ERA). Portfolio: 11 holdings.",
+          "entity_name": "Pivotal bioVenture Partners Investment Advisor LLC",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "1660 BUSH STREET 300",
-          "city": "San Francisco",
+          "street_address": "501 2ND ST, SUITE 200",
+          "city": "SAN FRANCISCO",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "4070439070",
+            "value": "123562016",
             "status": "verified",
-            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
-            "method": "ProPublica /organizations/{ein}.json financial summary field",
+            "source": "SEC Form 13F-HR, INFOTABLE VALUE column sum",
+            "method": "Aggregated across all 13F-HR filings for firm; VALUE in dollars (post-Jan 2023)",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Sergey",
-          "principal_last_name": "Brin",
-          "principal_title": "Director & President",
-          "principal_linkedin": null,
-          "principal_email": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "principal_phone": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "recent_activity": [],
-          "confidence_score": 0.65
-        },
-        "score": 0.4947974979877472,
-        "rank": 1
-      },
-      {
-        "record": {
-          "record_id": "990pf-CA-943380194-663da49f",
-          "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'FILO'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $1046.9M. Single source (IRS only), lower confidence tier.",
-          "state_targeting": "CA",
-          "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'FILO'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $1046.9M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "Skyline Foundation",
-          "description": null,
-          "investment_thesis": null,
-          "investing_sectors": [],
-          "domain": null,
-          "website": null,
-          "corporate_linkedin": null,
-          "street_address": "1660 BUSH STREET 300",
-          "city": "San Francisco",
-          "state_region": "CA",
-          "country": "United States",
-          "aum_usd": {
-            "value": "1046937741",
-            "status": "verified",
-            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
-            "method": "ProPublica /organizations/{ein}.json financial summary field",
-            "checked_on": "2026-07-28"
-          },
-          "aum_as_of": "2026-07-28",
-          "principal_first_name": "David",
-          "principal_last_name": "Filo",
-          "principal_title": "President",
-          "principal_linkedin": null,
-          "principal_email": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "principal_phone": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "recent_activity": [],
-          "confidence_score": 0.65
-        },
-        "score": 0.4688640236854553,
-        "rank": 2
-      },
-      {
-        "record": {
-          "record_id": "990pf-CA-261469601-52d07d60",
-          "discovery_source": "990pf",
-          "discovery_note": "Cross-channel surname match: 'Harrington' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $11.9M.",
-          "state_targeting": "CA",
-          "fo_type": "single_family_office",
-          "fo_type_evidence": "Cross-channel surname match: 'Harrington' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $11.9M.",
-          "entity_name": "Harrington Family Foundation",
-          "description": null,
-          "investment_thesis": null,
-          "investing_sectors": [],
-          "domain": null,
-          "website": null,
-          "corporate_linkedin": null,
-          "street_address": "105 FREMONT AVE STE A",
-          "city": "Los Altos",
-          "state_region": "CA",
-          "country": "United States",
-          "aum_usd": {
-            "value": "11913045",
-            "status": "verified",
-            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
-            "method": "ProPublica /organizations/{ein}.json financial summary field",
-            "checked_on": "2026-07-28"
-          },
-          "aum_as_of": "2026-07-28",
-          "principal_first_name": "Thomas",
-          "principal_last_name": "Harrington",
-          "principal_title": "President",
+          "principal_first_name": null,
+          "principal_last_name": null,
+          "principal_title": null,
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -493,16 +391,118 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.463256299495697,
+        "score": 0.660520076751709,
+        "rank": 1
+      },
+      {
+        "record": {
+          "record_id": "990pf-CA-832713007-519e08b4",
+          "discovery_source": "990pf",
+          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $210.9M. Single source (IRS only), lower confidence tier.",
+          "state_targeting": "CA",
+          "fo_type": "single_family_office",
+          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $210.9M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Sandberg Goldberg Bernthal Family Charitable Foundation",
+          "description": null,
+          "investment_thesis": null,
+          "investing_sectors": [],
+          "domain": null,
+          "website": null,
+          "corporate_linkedin": null,
+          "street_address": "548 MARKET ST PMB 38984",
+          "city": "San Francisco",
+          "state_region": "CA",
+          "country": "United States",
+          "aum_usd": {
+            "value": "210879190",
+            "status": "verified",
+            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
+            "method": "ProPublica /organizations/{ein}.json financial summary field",
+            "checked_on": "2026-07-28"
+          },
+          "aum_as_of": "2026-07-28",
+          "principal_first_name": "Thomas",
+          "principal_last_name": "Bernthal",
+          "principal_title": "Director",
+          "principal_linkedin": null,
+          "principal_email": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "principal_phone": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "recent_activity": [],
+          "confidence_score": 0.65
+        },
+        "score": 0.6522974371910095,
+        "rank": 2
+      },
+      {
+        "record": {
+          "record_id": "sec-ca-000317442-CADEN-CAPITAL-PARTNERS--LP-f77855c4",
+          "discovery_source": "sec_edgar",
+          "discovery_note": "ERA-registered (SEC family office exemption, Rule 202(a)(11)(G)-1). 13F-HR filing confirms manages $324.0M in 13(f) securities. Two independent SEC filings (13F + ADV/ERA). Portfolio: 12 holdings.",
+          "state_targeting": "CA",
+          "fo_type": "single_family_office",
+          "fo_type_evidence": "ERA-registered (SEC family office exemption, Rule 202(a)(11)(G)-1). 13F-HR filing confirms manages $324.0M in 13(f) securities. Two independent SEC filings (13F + ADV/ERA). Portfolio: 12 holdings.",
+          "entity_name": "CADEN CAPITAL PARTNERS, LP",
+          "description": null,
+          "investment_thesis": null,
+          "investing_sectors": [],
+          "domain": null,
+          "website": null,
+          "corporate_linkedin": null,
+          "street_address": "2912 2ND STREET",
+          "city": "SANTA MONICA",
+          "state_region": "CA",
+          "country": "United States",
+          "aum_usd": {
+            "value": "323959160",
+            "status": "verified",
+            "source": "SEC Form 13F-HR, INFOTABLE VALUE column sum",
+            "method": "Aggregated across all 13F-HR filings for firm; VALUE in dollars (post-Jan 2023)",
+            "checked_on": "2026-07-28"
+          },
+          "aum_as_of": "2026-07-28",
+          "principal_first_name": null,
+          "principal_last_name": null,
+          "principal_title": null,
+          "principal_linkedin": null,
+          "principal_email": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "principal_phone": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "recent_activity": [],
+          "confidence_score": 0.9
+        },
+        "score": 0.6470515727996826,
         "rank": 3
       }
     ],
     "field_requested": null,
     "field_status": "n/a",
     "citations": [
-      "990pf-CA-472107200-54c06dcb",
-      "990pf-CA-943380194-663da49f",
-      "990pf-CA-261469601-52d07d60"
+      "sec-ca-000287988-Pivotal-bioVenture-Partners-In-55f16346",
+      "990pf-CA-832713007-519e08b4",
+      "sec-ca-000317442-CADEN-CAPITAL-PARTNERS--LP-f77855c4"
     ]
   },
   {
@@ -558,7 +558,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.733192503452301,
+        "score": 0.9213129878044128,
         "rank": 1
       },
       {
@@ -609,39 +609,39 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.5339906811714172,
+        "score": 0.6478187441825867,
         "rank": 2
       },
       {
         "record": {
-          "record_id": "990pf-CA-954523232-4a660faa",
+          "record_id": "990pf-CA-813945624-c5f9cde6",
           "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'FLORES'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $4318.8M. Single source (IRS only), lower confidence tier.",
+          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $244.8M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'FLORES'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $4318.8M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "The California Endowment",
+          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $244.8M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Helen And Sanford Diller Family Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "1000 N ALAMEDA ST",
-          "city": "Los Angeles",
+          "street_address": "1 N B ST STE 4000",
+          "city": "San Mateo",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "4318845356",
+            "value": "244849988",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Robert",
-          "principal_last_name": "Ross",
-          "principal_title": "President/Ceo",
+          "principal_first_name": "Jaclyn",
+          "principal_last_name": "Safier",
+          "principal_title": "President",
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -660,7 +660,7 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.49689435958862305,
+        "score": 0.6088285446166992,
         "rank": 3
       }
     ],
@@ -669,7 +669,7 @@
     "citations": [
       "990pf-CA-942967074-a921b795",
       "990pf-CA-954016320-2d0e81b3",
-      "990pf-CA-954523232-4a660faa"
+      "990pf-CA-813945624-c5f9cde6"
     ]
   },
   {
@@ -725,7 +725,7 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.7679253220558167,
+        "score": 0.9247894883155823,
         "rank": 1
       },
       {
@@ -776,39 +776,39 @@
           "recent_activity": [],
           "confidence_score": 0.9
         },
-        "score": 0.7630677223205566,
+        "score": 0.92421954870224,
         "rank": 2
       },
       {
         "record": {
-          "record_id": "990pf-CA-946068932-2923e30e",
+          "record_id": "990pf-CA-956089998-1700165c",
           "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: shared surname 'EISENHARDT'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $469.1M. Single source (IRS only), lower confidence tier.",
+          "discovery_note": "990-PF-only Tier 2: shared surname 'AHMANSON'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $1198.6M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'EISENHARDT'. Investment/treasury officer present. Distinctive surname (appears in 3 foundations). Foundation assets: $469.1M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "Evelyn And Walter Haas Jr Fund",
+          "fo_type_evidence": "990-PF-only Tier 2: shared surname 'AHMANSON'. Investment/treasury officer present. Distinctive surname (appears in 2 foundations). Foundation assets: $1198.6M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "The Ahmanson Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "450 SANSOME ST",
-          "city": "San Francisco",
+          "street_address": "9215 WILSHIRE BLVD",
+          "city": "Beverly Hills",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "469121844",
+            "value": "1198575686",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Cathy",
-          "principal_last_name": "Cha",
-          "principal_title": "President And Ceo",
+          "principal_first_name": "William",
+          "principal_last_name": "Ahmanson",
+          "principal_title": "Trustee/Pres.",
           "principal_linkedin": null,
           "principal_email": {
             "value": null,
@@ -827,7 +827,7 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.4086236357688904,
+        "score": 0.5909821391105652,
         "rank": 3
       }
     ],
@@ -836,65 +836,14 @@
     "citations": [
       "990pf-CA-873374164-853a6434",
       "990pf-CA-470793015-78b91d4b",
-      "990pf-CA-946068932-2923e30e"
+      "990pf-CA-956089998-1700165c"
     ]
   },
   {
     "query": "single family offices in Palo Alto",
-    "answer": "Koum Family Foundation is classified as a single family office.",
+    "answer": "Waverley Street Foundation is classified as a single family office.",
     "grounded": true,
     "retrieved": [
-      {
-        "record": {
-          "record_id": "990pf-CA-475446562-b616b9fd",
-          "discovery_source": "990pf",
-          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $2328.7M. Single source (IRS only), lower confidence tier.",
-          "state_targeting": "CA",
-          "fo_type": "single_family_office",
-          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $2328.7M. Single source (IRS only), lower confidence tier.",
-          "entity_name": "Koum Family Foundation",
-          "description": null,
-          "investment_thesis": null,
-          "investing_sectors": [],
-          "domain": null,
-          "website": null,
-          "corporate_linkedin": null,
-          "street_address": "1801 PAGE MILL RD STE 100",
-          "city": "Palo Alto",
-          "state_region": "CA",
-          "country": "United States",
-          "aum_usd": {
-            "value": "2328710419",
-            "status": "verified",
-            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
-            "method": "ProPublica /organizations/{ein}.json financial summary field",
-            "checked_on": "2026-07-28"
-          },
-          "aum_as_of": "2026-07-28",
-          "principal_first_name": "Jan",
-          "principal_last_name": "Koum",
-          "principal_title": "Director",
-          "principal_linkedin": null,
-          "principal_email": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "principal_phone": {
-            "value": null,
-            "status": "could_not_verify",
-            "source": null,
-            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
-            "checked_on": null
-          },
-          "recent_activity": [],
-          "confidence_score": 0.65
-        },
-        "score": 0.5003743171691895,
-        "rank": 1
-      },
       {
         "record": {
           "record_id": "990pf-CA-813242506-6f86aba7",
@@ -943,38 +892,89 @@
           "recent_activity": [],
           "confidence_score": 0.65
         },
-        "score": 0.4808078408241272,
-        "rank": 2
+        "score": 0.6629990935325623,
+        "rank": 1
       },
       {
         "record": {
-          "record_id": "990pf-CA-261469601-52d07d60",
+          "record_id": "990pf-CA-475446562-b616b9fd",
           "discovery_source": "990pf",
-          "discovery_note": "Cross-channel surname match: 'Harrington' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $11.9M.",
+          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $2328.7M. Single source (IRS only), lower confidence tier.",
           "state_targeting": "CA",
           "fo_type": "single_family_office",
-          "fo_type_evidence": "Cross-channel surname match: 'Harrington' appears in both 990-PF (IRS private foundation filing, family surname in name) and SEC 13F filer name. Two independent sources: IRS (family foundation) + SEC (investment management entity). Foundation assets: $11.9M.",
-          "entity_name": "Harrington Family Foundation",
+          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $2328.7M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Koum Family Foundation",
           "description": null,
           "investment_thesis": null,
           "investing_sectors": [],
           "domain": null,
           "website": null,
           "corporate_linkedin": null,
-          "street_address": "105 FREMONT AVE STE A",
-          "city": "Los Altos",
+          "street_address": "1801 PAGE MILL RD STE 100",
+          "city": "Palo Alto",
           "state_region": "CA",
           "country": "United States",
           "aum_usd": {
-            "value": "11913045",
+            "value": "2328710419",
             "status": "verified",
             "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
             "method": "ProPublica /organizations/{ein}.json financial summary field",
             "checked_on": "2026-07-28"
           },
           "aum_as_of": "2026-07-28",
-          "principal_first_name": "Thomas",
-          "principal_last_name": "Harrington",
+          "principal_first_name": "Jan",
+          "principal_last_name": "Koum",
+          "principal_title": "Director",
+          "principal_linkedin": null,
+          "principal_email": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "principal_phone": {
+            "value": null,
+            "status": "could_not_verify",
+            "source": null,
+            "method": "Not available in IRS 990-PF or SEC 13F filings; requires website scrape or LinkedIn",
+            "checked_on": null
+          },
+          "recent_activity": [],
+          "confidence_score": 0.65
+        },
+        "score": 0.6568865776062012,
+        "rank": 2
+      },
+      {
+        "record": {
+          "record_id": "990pf-CA-813945624-c5f9cde6",
+          "discovery_source": "990pf",
+          "discovery_note": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $244.8M. Single source (IRS only), lower confidence tier.",
+          "state_targeting": "CA",
+          "fo_type": "single_family_office",
+          "fo_type_evidence": "990-PF-only Tier 2: 'Family' in foundation name. Investment/treasury officer present. Distinctive surname (appears in 0 foundations). Foundation assets: $244.8M. Single source (IRS only), lower confidence tier.",
+          "entity_name": "Helen And Sanford Diller Family Foundation",
+          "description": null,
+          "investment_thesis": null,
+          "investing_sectors": [],
+          "domain": null,
+          "website": null,
+          "corporate_linkedin": null,
+          "street_address": "1 N B ST STE 4000",
+          "city": "San Mateo",
+          "state_region": "CA",
+          "country": "United States",
+          "aum_usd": {
+            "value": "244849988",
+            "status": "verified",
+            "source": "IRS Form 990-PF, Part I (revenue/assets summary)",
+            "method": "ProPublica /organizations/{ein}.json financial summary field",
+            "checked_on": "2026-07-28"
+          },
+          "aum_as_of": "2026-07-28",
+          "principal_first_name": "Jaclyn",
+          "principal_last_name": "Safier",
           "principal_title": "President",
           "principal_linkedin": null,
           "principal_email": {
@@ -992,18 +992,18 @@
             "checked_on": null
           },
           "recent_activity": [],
-          "confidence_score": 0.9
+          "confidence_score": 0.65
         },
-        "score": 0.40013277530670166,
+        "score": 0.6485743522644043,
         "rank": 3
       }
     ],
     "field_requested": "fo_type",
     "field_status": "verified",
     "citations": [
-      "990pf-CA-475446562-b616b9fd",
       "990pf-CA-813242506-6f86aba7",
-      "990pf-CA-261469601-52d07d60"
+      "990pf-CA-475446562-b616b9fd",
+      "990pf-CA-813945624-c5f9cde6"
     ]
   }
 ]

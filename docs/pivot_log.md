@@ -143,3 +143,52 @@ whether there's any family signal. The soft score makes shared
 surname the discriminating signal at higher board sizes — which is
 exactly what it should be, since shared surname is the actual
 family-foundation evidence and officer count is only a proxy.
+
+## Pivot 6 — ADV brochure text not accessible via public API; using IAPD structured fields instead
+
+**Problem:** The plan for SEC EDGAR channel 2 was 13F discovery + ADV
+Part 2A brochure text verification (LLM classification of "manages
+family capital vs. third-party clients"). Three access routes all
+failed:
+
+1. **IAPD API** (`api.adviserinfo.sec.gov/search/firm/{crd}`): returns
+   brochure metadata (version ID, name, date) but NOT the brochure
+   text, and NOT the Part 1A Item 5.D client-type breakdown (the
+   2024 ADV amendment added "family offices" as a structured checkbox
+   category, but that data isn't exposed through the public API).
+2. **files.adviserinfo.sec.gov brochure endpoint**
+   (`/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID={id}`):
+   the host responds (200, not 404) but returns "No data found" for
+   both fresh IDs (ICONIQ 1027115, ProVise 1032294) and a known-good
+   example ID (833997). The server rotates/supersedes brochure
+   versions and old IDs stop resolving. The www.adviserinfo.sec.gov
+   host returns a JS-rendered SPA shell, not the PDF.
+3. **EDGAR full-text search** (`efts.sec.gov`): ADV forms aren't
+   indexed — they're filed through IARD, not EDGAR. Searching
+   `forms=ADV` returns 0 results. "Family office" mentions in EDGAR
+   are all in 10-K/8-K/proxy filings, not RIA filings.
+
+**Pivot:** Use 13F holdings-concentration as the primary family-office
+discriminator (empirically validated: Cascade Investment Group = Bill
+Gates' FO, 146 holdings; Citadel 15,551; AQR 14,495; Millennium 5,978;
+Two Sigma 3,628 — family offices run concentrated books, quant/multi-
+strat funds run thousands). Use IAPD structured fields as secondary
+confirmation: `otherNames` containing "family", ERA (Exempt Reporting
+Adviser) status, relying-advisor count. Skip brochure text entirely.
+
+**What this costs:** The ADV brochure's explicit "we manage family
+capital" statement would have been the strongest affirmative
+verification signal for the 13F channel — stronger than portfolio
+shape alone. Without it, 13F candidates are qualified by portfolio
+concentration + IAPD metadata, which is a weaker (but still real and
+empirically grounded) signal. The firm-level qualification gate
+(schema.FamilyOfficeRecord) will make the final SFO/MFO/unclear call
+during enrichment, and candidates that can't be confidently classified
+will be marked `unclear` and excluded — not force-labeled.
+
+**Future improvement:** A headless-browser approach (Playwright) could
+load the IAPD SPA, capture the PDF download URL from network traffic,
+fetch the PDF, extract text, and run LLM classification on Item 7
+(client types). This is ~2-3 hours of additional work and adds browser
++ PDF-parsing dependencies. Deferred until after the RAG layer is
+built; documented here as a known gap, not hidden.

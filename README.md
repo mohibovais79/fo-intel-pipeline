@@ -1,5 +1,7 @@
 # Family Office Intelligence Pipeline
 
+**Live demo: https://fo-intel-pipeline.fastapicloud.dev/**
+
 A discovery, qualification, and enrichment pipeline for identifying
 single-family offices (SFOs) in California using public filings.
 Built as a pilot for the CA market with two independent discovery

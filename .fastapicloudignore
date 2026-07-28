@@ -1,0 +1,9 @@
+# Include data files (needed for RAG)
+!data/
+
+# Exclude cache and large intermediate files
+data/cache/
+__pycache__/
+*.pyc
+.venv/
+.git/

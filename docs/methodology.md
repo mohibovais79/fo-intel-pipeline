@@ -44,7 +44,44 @@ Both guards are enforced in code (`storage.source_mix_ratio` and
 **Achieved ratios (CA pilot):**
 - Discovery stage: 52.1% 990pf / 47.9% sec_edgar (768 + 706 = 1,474
   raw candidates). Within the 0.60 guard.
-- Post-qualification: TBD — checked after enrichment runs.
+- Post-qualification: 95.3% 990pf / 4.7% sec_edgar (121 + 6 = 127
+  qualified candidates). **Guard violated (0.953 > 0.65).**
+- Final selection (after source-balance cap): 86.4% 990pf / 13.6%
+  sec_edgar (38 + 6 = 44 records). **Still above guard.**
+
+**Why the ratios diverge:** This is a structural finding, not a
+filter-calibration problem. 990-PF's officer/surname evidence
+structurally produces more affirmatively-qualifiable candidates than
+13F's portfolio-shape evidence, at the evidentiary bar held constant
+across both channels. SEC EDGAR's 13F universe of CA-headquartered,
+holdings-concentrated filers genuinely contains very few entities with
+independent, affirmative confirmation of family-office status (only 6:
+4 ERA-registered + 2 IAPD-verified).
+
+**Decision: accept and document, not rebalance.** The alternatives
+were considered and rejected:
+- *Lowering SEC EDGAR's bar* (adding a "concentrated-only" Tier 3 at
+  confidence 0.65): rejected because concentration alone doesn't
+  distinguish family offices from concentrated activist funds
+  (ValueAct, Dragoneer — legitimate non-family firms — sit in exactly
+  that profile). This would be the ratio target driving the evidence
+  standard, backwards from how it should work.
+- *Adding a 3rd channel* (CA SOS or LinkedIn): rejected under time
+  pressure. Building a third scraper + qualification logic + cross-
+  channel matcher with uncertain payoff is the same trap — reaching
+  for more machinery to force a ratio, rather than accepting what the
+  evidence says.
+- *Tightening 990-PF further*: already tightened Tier 2 from $10M/$rarity-5
+  to $50M/$rarity-3, which reduced qualifiers from 266 to 127. Further
+  tightening would discard real family foundations without fixing the
+  structural imbalance.
+
+**This is the clearest blind spot in the submission:** SEC EDGAR/13F
+is good at finding candidates (706 raw, 48% of discovery) but weak at
+independently confirming family-office status without the ADV brochure
+text that isn't accessible via public API (Pivot 6). The discovery-
+stage balance is real; the qualification-stage imbalance is an honest
+consequence of holding both channels to the same evidence standard.
 
 ### SFO-bias
 

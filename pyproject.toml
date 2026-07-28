@@ -24,5 +24,8 @@ dev = [
 line-length = 100
 target-version = "py311"
 
+[tool.fastapi]
+entrypoint = "main:app"
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

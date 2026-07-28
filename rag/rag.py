@@ -70,10 +70,14 @@ def _build_record_text(record: dict) -> str:
 class FamilyOfficeRAG:
     """RAG system with field-level provenance grounding."""
 
-    def __init__(self, records_path: str = "data/discovery/final_enriched.jsonl"):
+    def __init__(self, records_path: str | None = None):
         self.records: list[dict] = []
         self.embeddings: np.ndarray | None = None
         self.model: SentenceTransformer | None = None
+        # Resolve path relative to project root (two levels up from this file)
+        if records_path is None:
+            project_root = Path(__file__).resolve().parent.parent
+            records_path = str(project_root / "data" / "discovery" / "final_enriched.jsonl")
         self.records_path = records_path
 
     def load(self):

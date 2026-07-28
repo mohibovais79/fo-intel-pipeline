@@ -17,7 +17,7 @@ from rag.rag import FamilyOfficeRAG
 
 app = FastAPI(title="Family Office Intelligence — CA Pilot")
 
-templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 
 # Load RAG once at startup
 _rag: FamilyOfficeRAG | None = None

@@ -673,12 +673,17 @@
                 <div class="answer">${formatAnswer(data.answer)}</div>
             `;
 
-            // Citations
+            // Citations — show entity name + source, not raw IDs
             if (data.citations && data.citations.length > 0) {
                 html += `<div class="result-meta">
-                    <div class="meta-label">Source Records</div>
-                    <div class="citation-chips">
-                        ${data.citations.map(c => `<span class="citation-chip">${c}</span>`).join('')}
+                    <div class="meta-label">Sources</div>
+                    <div class="retrieved-list">
+                        ${data.citations.map(c => `
+                            <div class="retrieved-item">
+                                <span class="retrieved-name">${escapeHtml(c.entity)}</span>
+                                <span class="retrieved-score">${c.source}</span>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>`;
             }
@@ -694,12 +699,12 @@
             // Retrieved records (only for grounded results)
             if (data.retrieved && data.retrieved.length > 0 && isGrounded) {
                 html += `<div class="result-meta">
-                    <div class="meta-label">Retrieved from Database</div>
+                    <div class="meta-label">Records Matched</div>
                     <div class="retrieved-list">
                         ${data.retrieved.map(r => `
                             <div class="retrieved-item">
                                 <span class="retrieved-name">${escapeHtml(r.record.entity_name)}</span>
-                                <span class="retrieved-score">${(r.score * 100).toFixed(0)}% match</span>
+                                <span class="retrieved-score">${r.record.discovery_source_label} · ${r.record.confidence_label}</span>
                             </div>
                         `).join('')}
                     </div>

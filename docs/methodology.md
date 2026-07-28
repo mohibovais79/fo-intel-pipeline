@@ -41,13 +41,37 @@ Tracked at TWO points, not just one:
 Both guards are enforced in code (`storage.source_mix_ratio` and
 `storage.source_mix_ratio_qualified`), not by memory.
 
-**Achieved ratios (CA pilot):**
+**Achieved ratios (CA pilot, after data quality cleanup):**
 - Discovery stage: 52.1% 990pf / 47.9% sec_edgar (768 + 706 = 1,474
   raw candidates). Within the 0.60 guard.
-- Post-qualification: 95.3% 990pf / 4.7% sec_edgar (121 + 6 = 127
-  qualified candidates). **Guard violated (0.953 > 0.65).**
+- Post-qualification: 94.4% 990pf / 5.6% sec_edgar (102 + 6 = 108
+  qualified candidates). **Guard violated (0.944 > 0.65).**
 - Final selection (after source-balance cap): 86.4% 990pf / 13.6%
   sec_edgar (38 + 6 = 44 records). **Still above guard.**
+
+**Data quality cleanup (pre-RAG):** An interim run produced 127
+qualified candidates with 31 at confidence 0.9. Inspection revealed
+the 0.9 tier was contaminated:
+- *Surname collisions:* cross-channel matching was indexing all
+  officer surnames, not just the foundation family surname. Moore
+  Foundation (officer named Hennessy) was matched to Hennessy Advisors
+  and labeled 0.9 confidence SFO. Fixed: only the foundation family
+  surname is indexed, validated against the officer list. Cross-channel
+  matches dropped from 33 to 8 (5 unique real family surnames: West,
+  Roberts, Davis, Chandler, Harrington).
+- *Corporate foundations:* Visa, Salesforce, Levi Strauss, Skoll,
+  Breakthrough Prize, PG&E, East West Bank, Fremont Bank were labeled
+  single_family_office. Fixed: added corporate foundation filter
+  (known-names denylist + "X Bank/Corporation Foundation" pattern).
+  8 corporate foundations excluded.
+- *Principal extraction:* was picking hired staff (Tim Lash) over
+  family members (Gary West) for family foundations. Fixed: prefer
+  officers who share the foundation surname.
+
+After cleanup: 108 qualified (was 127), 10 at confidence 0.9 (was 31),
+96 at 0.65, 2 at 0.75. The cleanup strengthened the source-mix
+finding — the 990-PF channel's apparent volume was partly inflated by
+loose surname matching, and the honest imbalance is structural.
 
 **Why the ratios diverge:** This is a structural finding, not a
 filter-calibration problem. 990-PF's officer/surname evidence

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Office Intelligence — CA Pilot</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --border: #2a2d3a;
+            --text: #e4e4e7;
+            --text-muted: #71717a;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+        header { text-align: center; margin-bottom: 2rem; }
+        header h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 0.5rem; }
+        header p { color: var(--text-muted); font-size: 0.9rem; }
+        .search-box {
+            display: flex; gap: 0.5rem; margin-bottom: 1rem;
+        }
+        .search-box input {
+            flex: 1; padding: 0.75rem 1rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); color: var(--text); font-size: 1rem;
+            outline: none; transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--accent); }
+        .search-box button {
+            padding: 0.75rem 1.5rem; background: var(--accent);
+            border: none; border-radius: var(--radius); color: white;
+            font-size: 1rem; cursor: pointer; transition: background 0.2s;
+        }
+        .search-box button:hover { background: var(--accent-hover); }
+        .examples {
+            display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem;
+        }
+        .examples button {
+            padding: 0.4rem 0.8rem; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 20px;
+            color: var(--text-muted); font-size: 0.8rem; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .examples button:hover { border-color: var(--accent); color: var(--text); }
+        .result-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem;
+        }
+        .result-card.grounded { border-left: 3px solid var(--success); }
+        .result-card.unverified { border-left: 3px solid var(--warning); }
+        .result-card.no-results { border-left: 3px solid var(--danger); }
+        .badge {
+            display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 500; margin-bottom: 0.75rem;
+        }
+        .badge.grounded { background: rgba(34,197,94,0.15); color: var(--success); }
+        .badge.unverified { background: rgba(245,158,11,0.15); color: var(--warning); }
+        .badge.no-results { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .answer { white-space: pre-wrap; }
+        .answer strong { color: var(--text); }
+        .citations {
+            margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);
+            font-size: 0.8rem; color: var(--text-muted);
+        }
+        .citations code {
+            background: var(--bg); padding: 0.1rem 0.4rem;
+            border-radius: 4px; font-size: 0.75rem;
+        }
+        .provenance {
+            margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);
+        }
+        .stats {
+            display: flex; gap: 2rem; justify-content: center;
+            margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat .num { font-size: 1.5rem; font-weight: 600; color: var(--accent); }
+        .stat .label { font-size: 0.75rem; color: var(--text-muted); }
+        footer {
+            text-align: center; margin-top: 3rem; padding-top: 1rem;
+            border-top: 1px solid var(--border); color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .loading { opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Family Office Intelligence</h1>
+            <p>California pilot — 44 qualified family office records, discovered via IRS 990-PF + SEC EDGAR 13F</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat"><div class="num">44</div><div class="label">Qualified Records</div></div>
+            <div class="stat"><div class="num">2</div><div class="label">Discovery Channels</div></div>
+            <div class="stat"><div class="num">1,474</div><div class="label">Raw Candidates</div></div>
+            <div class="stat"><div class="num">3</div><div class="label">Confidence Tiers</div></div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="query" placeholder="Search family offices by name, city, principal, or asset size..." />
+            <button onclick="search()">Search</button>
+        </div>
+
+        <div class="examples">
+            <button onclick="quickSearch('family offices in San Francisco')">Family offices in SF</button>
+            <button onclick="quickSearch('Who runs the Roberts Foundation?')">Who runs Roberts Foundation?</button>
+            <button onclick="quickSearch('What is the AUM of the Gary And Mary West Foundation?')">West Foundation AUM</button>
+            <button onclick="quickSearch('What is the contact email for the Ahmanson Foundation?')">Email for Ahmanson (unverified)</button>
+            <button onclick="quickSearch('single family offices in Palo Alto')">SFOs in Palo Alto</button>
+        </div>
+
+        <div id="results"></div>
+
+        <footer>
+            Grounding control: retrieval threshold + field-level provenance check.<br>
+            Every answer is constrained to verified data. Unverifiable fields return "could not verify" — never a guess.
+        </footer>
+    </div>
+
+    <script>
+        async function search() {
+            const query = document.getElementById('query').value.trim();
+            if (!query) return;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="result-card loading">Searching...</div>';
+
+            try {
+                const resp = await fetch('/api/search?q=' + encodeURIComponent(query));
+                const data = await resp.json();
+                resultsDiv.innerHTML = renderResult(data);
+            } catch (err) {
+                resultsDiv.innerHTML = '<div class="result-card no-results">Error: ' + err.message + '</div>';
+            }
+        }
+
+        function quickSearch(q) {
+            document.getElementById('query').value = q;
+            search();
+        }
+
+        function renderResult(data) {
+            let badgeClass = data.grounded ? 'grounded' :
+                (data.field_status === 'no_retrieval' ? 'no-results' : 'unverified');
+            let badgeText = data.grounded ? 'Grounded' :
+                (data.field_status === 'no_retrieval' ? 'No Results' : 'Could Not Verify');
+
+            let html = `<div class="result-card ${badgeClass}">
+                <span class="badge ${badgeClass}">${badgeText}</span>
+                <div class="answer">${formatAnswer(data.answer)}</div>`;
+
+            if (data.citations && data.citations.length > 0) {
+                html += `<div class="citations">Citations: ${data.citations.map(c => '<code>' + c + '</code>').join(' ')}</div>`;
+            }
+
+            if (data.field_requested && data.field_status === 'could_not_verify') {
+                html += `<div class="provenance">Field "${data.field_requested}" is marked could_not_verify — the record exists but this specific field is not available in public filings.</div>`;
+            }
+
+            if (data.retrieved && data.retrieved.length > 0) {
+                html += '<div class="provenance">Retrieved records:<br>';
+                data.retrieved.forEach(r => {
+                    html += `&nbsp;&nbsp;score=${r.score.toFixed(3)} | ${r.record.entity_name} (confidence ${r.record.confidence_score})<br>`;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function formatAnswer(text) {
+            // Simple markdown: **bold** and newlines
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
+
+        document.getElementById('query').addEventListener('keypress', e => {
+            if (e.key === 'Enter') search();
+        });
+    </script>
+</body>
+</html>

@@ -11,20 +11,20 @@ User Query
     │
     ▼
 ┌──────────────────┐
-│  Embedding Model │  sentence-transformers all-MiniLM-L6-v2
-│  (384-dim)       │  Query → vector
+│  Embedding Model │  fastembed (ONNX) BAAI/bge-small-en-v1.5
+│  (384-dim)       │  Query → vector (model loaded as singleton)
 └────────┬─────────┘
          │
          ▼
 ┌──────────────────┐
 │  Retrieval       │  numpy cosine similarity
-│  (cosine sim)    │  44 record embeddings @ query embedding
+│  (cosine sim)    │  pre-computed 44×384 matrix @ query vector
 └────────┬─────────┘
          │
          ▼
 ┌──────────────────┐
 │  Grounding Layer │  TWO checks:
-│  1: Threshold    │  → score < 0.3 = "no results"
+│  1: Threshold    │  → score < 0.58 = "no results"
 │  2: Field proven.│  → field.status != verified = "could not verify"
 └────────┬─────────┘
          │
@@ -52,11 +52,30 @@ better, more consistent answers than an LLM anyway.
 
 ## Embedding model
 
-- **Model:** `all-MiniLM-L6-v2` from sentence-transformers
+- **Model:** `BAAI/bge-small-en-v1.5` via fastembed (ONNX runtime)
 - **Dimensions:** 384
-- **Size:** ~90MB
+- **Size:** ~130MB resident (ONNX runtime + model weights)
 - **Speed:** <100ms for single query embedding
 - **No external API calls** — runs entirely locally
+
+### Pre-computed record embeddings
+
+Record embeddings are computed **offline** by `rag/embed_offline.py` and
+saved as a static `.npy` file (`data/discovery/record_embeddings.npy`,
+44 × 384 float32, L2-normalized, ~67KB). The deployed app loads this
+file at startup — it never re-embeds the dataset.
+
+At request time, only the incoming query string is embedded using a
+module-level fastembed singleton (lazy-loaded on first query, not at
+boot). This keeps startup fast and memory predictable.
+
+**Why this architecture:** the initial deployment used
+sentence-transformers + torch, which hit 500-600MB resident on the
+512MB cloud instance and OOMed during verification. Switching to
+fastembed (ONNX) + pre-computed embeddings dropped peak RSS to
+~331MB, well under the ceiling. The tradeoff: re-running
+`embed_offline.py` whenever records change, which is acceptable for
+a 44-record pilot.
 
 ### Record text construction
 
@@ -75,10 +94,17 @@ unverified fields (email, phone) to the retrieval layer.
 
 - **Method:** numpy cosine similarity (normalized dot product)
 - **Top-k:** 3 results
-- **Threshold:** 0.30 (below = "no results")
+- **Threshold:** 0.58 (below = "no results")
 - **Keyword boost:** +0.2 for exact entity name word matches
   (prevents semantic drift where "Who runs Roberts Foundation?"
   retrieves a different foundation because "who runs" adds weight)
+
+The threshold was tuned empirically: bge-small produces higher base
+similarities than MiniLM, so the original 0.30 let irrelevant queries
+through. At 0.58, the "quantum computing in Berlin" test query
+(top score 0.528) correctly returns no results, while the weakest
+legitimate query ("family offices in San Francisco", top score 0.661)
+still retrieves.
 
 No vector database needed — 44 × 384 matrix fits in memory and
 similarity search is a single matrix multiplication.
@@ -87,7 +113,7 @@ similarity search is a single matrix multiplication.
 
 ### Layer 1: Retrieval threshold
 
-If no records score above 0.30 similarity, the system returns an
+If no records score above 0.58 similarity, the system returns an
 "insufficient evidence" response with search suggestions. This
 prevents the system from answering questions about entities not in
 the database.
@@ -105,7 +131,7 @@ system checks `VerifiedField.status` for the requested field, not
 just whether a record was retrieved.
 
 **Test query:** "What is the contact email for the Ahmanson Foundation?"
-**Result:** Record retrieved (score 0.767), but `principal_email.status
+**Result:** Record retrieved (score 0.878), but `principal_email.status
 = could_not_verify`
 **Response:** "I found The Ahmanson Foundation in our database, but I
 don't have a verified contact email for them. This information isn't
@@ -153,11 +179,13 @@ Test log: `data/discovery/rag_test_log.json`
 ## Web UI
 
 - **Framework:** FastAPI + Jinja2
+- **Deployment:** FastAPI Cloud at https://fo-intel-pipeline.fastapicloud.dev
 - **Endpoint:** `GET /` (UI), `GET /api/search?q=...` (API)
 - **Design:** Dark theme, Inter typography, animated transitions
 - **Status badges:** Green (grounded), amber (could_not_verify), red (no results)
 - **Provenance display:** Citation chips, retrieved records with match %
 - **Failure states:** Read like a product, not debug output
+- **Memory budget:** ~331MB peak RSS on 512MB cloud instance
 
 ## What an LLM would add (future work, not built)
 

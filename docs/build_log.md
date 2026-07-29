@@ -43,6 +43,22 @@ layer with a deployed web UI.
   language), field detection keywords (removed "office" triggering
   address field), UI design (full redesign for premium feel)
 
+### Session 4 (~2 hours): Cloud deployment + OOM fix + CSV export
+
+- Deployed to FastAPI Cloud (https://fo-intel-pipeline.fastapicloud.dev)
+- First two deployments failed verification (OOM) — sentence-transformers
+  + torch hit 500-600MB on the 512MB instance
+- Replaced sentence-transformers with fastembed (ONNX runtime, bge-small-en-v1.5)
+- Pre-computed record embeddings offline → static .npy file (67KB)
+- Deployed app loads .npy, embeds only the query at runtime
+- Peak RSS dropped to 331MB — well under the 512MB ceiling
+- Tuned retrieval threshold 0.30 → 0.58 (bge-small has higher base sims)
+- Exported 44 records to CSV (35 columns, full provenance preserved)
+- AI produced: initial deploy config, fastembed integration, embed script
+- I changed: architecture decision (pre-compute vs re-embed), threshold
+  tuning (empirically verified Berlin query vs legitimate queries),
+  CSV column ordering for readability
+
 ## What AI produced vs. what I changed
 
 **AI produced (initial version):**
@@ -63,7 +79,7 @@ layer with a deployed web UI.
 - UI: full redesign for premium UX
 - Principal extraction: prefer family members over hired staff
 
-## Pivots (6 total)
+## Pivots (7 total)
 
 1. Officer count: hard cap → soft scoring
 2. CA SOS channel: planned → dropped (time management)
@@ -71,10 +87,11 @@ layer with a deployed web UI.
 4. ADV brochure text: inaccessible via public API (Pivot 6)
 5. 13F units: thousands → dollars (SEC changed Jan 2023)
 6. Source-mix: accepted imbalance as structural finding
+7. Cloud OOM: sentence-transformers → fastembed + pre-computed embeddings
 
 See `docs/pivot_log.md` for full details.
 
 ## Git history
 
-15 commits across 3 sessions, all incremental (no squashed history).
+17 commits across 4 sessions, all incremental (no squashed history).
 Author: mohibovais79 throughout.
